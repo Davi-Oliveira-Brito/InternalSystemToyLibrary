@@ -1,0 +1,50 @@
+[
+  {
+    "id": "1",
+    "username": "adminPanamby",
+    "password": "ludoteca123",
+    "unidade": "Panamby"
+  },
+  {
+    "id": "2",
+    "username": "adminVilaAndrade",
+    "password": "ludoteca123",
+    "unidade": "Vila Andrade"
+  },
+  {
+    "id": "3",
+    "username": "adminMorumbi",
+    "password": "ludoteca123",
+    "unidade": "Morumbi"
+  },
+  {
+    "id": "4",
+    "username": "adminValinhos",
+    "password": "ludoteca123",
+    "unidade": "Valinhos"
+  },
+  {
+    "id": "5",
+    "username": "adminPanamby2",
+    "password": "ludoteca123",
+    "unidade": "Panamby"
+  },
+  {
+    "id": "6",
+    "username": "adminVilaAndrade2",
+    "password": "ludoteca123",
+    "unidade": "Vila Andrade"
+  },
+  {
+    "id": "7",
+    "username": "adminMorumbi2",
+    "password": "ludoteca123",
+    "unidade": "Morumbi"
+  },
+  {
+    "id": "8",
+    "username": "adminValinhos2",
+    "password": "ludoteca123",
+    "unidade": "Valinhos"
+  }
+]
