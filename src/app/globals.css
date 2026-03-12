@@ -1,7 +1,8 @@
-@import "tailwindcss";
+
 
 :root {
-  --bg: #F2F2F2;
+  --bg-dark: #0C0F18;
+  --bg: #0C0F18;
   --card: #FFFFFF;
   --accent: #003B7A;
   --accent-hover: #002d5e;
@@ -11,7 +12,6 @@
   --danger: #dc2626;
   --success: #16a34a;
 }
-
 * {
   margin: 0;
   padding: 0;

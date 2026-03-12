@@ -1,25 +1,23 @@
 import { NextResponse } from 'next/server'
-import fs from 'fs'
-import path from 'path'
-import { User } from '@/types'
+import { supabase } from '@/lib/supabase'
 
 export async function POST(req: Request) {
   const { username, password } = await req.json()
 
-  const filePath = path.join(process.cwd(), 'data', 'users.json')
-  const users: User[] = JSON.parse(fs.readFileSync(filePath, 'utf-8'))
+  const { data, error } = await supabase
+    .from('users')
+    .select('*')
+    .eq('username', username)
+    .eq('password', password)
+    .single()
 
-  const user = users.find(
-    (u) => u.username === username && u.password === password
-  )
-
-  if (!user) {
+  if (error || !data) {
     return NextResponse.json({ ok: false }, { status: 401 })
   }
 
   return NextResponse.json({
     ok: true,
-    unidade: user.unidade,
-    username: user.username,
+    unidade: data.unidade,
+    username: data.username,
   })
 }
