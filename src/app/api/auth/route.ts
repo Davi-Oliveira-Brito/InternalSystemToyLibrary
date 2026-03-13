@@ -2,12 +2,12 @@ import { NextResponse } from 'next/server'
 import { supabase } from '@/lib/supabase'
 
 export async function POST(req: Request) {
-  const { username, password } = await req.json()
+  const { email, password } = await req.json()
 
   const { data, error } = await supabase
     .from('users')
     .select('*')
-    .eq('username', username)
+    .eq('email', email)
     .eq('password', password)
     .single()
 
@@ -18,6 +18,6 @@ export async function POST(req: Request) {
   return NextResponse.json({
     ok: true,
     unidade: data.unidade,
-    username: data.username,
+    email: data.email,
   })
 }

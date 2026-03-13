@@ -23,7 +23,7 @@ interface Game {
 export default function GerenciarJogos() {
   const router = useRouter();
 
-  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [unidade, setUnidade] = useState('');
   const [games, setGames] = useState<Game[]>([]);
   const [loading, setLoading] = useState(true);
@@ -42,7 +42,7 @@ export default function GerenciarJogos() {
       router.push('/login');
       return;
     }
-    setUsername(sessionStorage.getItem('username') || '');
+    setEmail(sessionStorage.getItem('email') || '');
     setUnidade(sessionStorage.getItem('unidade') || '');
   }, [router]);
 
@@ -95,7 +95,7 @@ export default function GerenciarJogos() {
     <main className={styles.page}>
       <Banner
         backgroundImage="/cards/GerenciarJogos.png"
-        username={username}
+        email={email}
         title="Gerenciar Jogos"
         subtitle="Cadastre, edite e organize os jogos disponíveis"
       />

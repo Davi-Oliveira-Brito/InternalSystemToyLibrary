@@ -19,7 +19,7 @@ export default function LoginPage() {
     const res = await fetch('/api/auth', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ username: email, password }),
+      body: JSON.stringify({ email: email, password }),
     })
 
     const data = await res.json()
@@ -27,7 +27,7 @@ export default function LoginPage() {
     if (data.ok) {
       sessionStorage.setItem('auth', '1')
       sessionStorage.setItem('unidade', data.unidade)
-      sessionStorage.setItem('username', data.username)
+      sessionStorage.setItem('email', data.email)
       router.push('/home')
     } else {
       setError('Email ou senha incorretos.')
