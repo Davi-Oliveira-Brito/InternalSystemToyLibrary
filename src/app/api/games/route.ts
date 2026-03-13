@@ -5,14 +5,30 @@ export async function GET(req: Request) {
   const { searchParams } = new URL(req.url)
   const unidade = searchParams.get('unidade')
 
-  const { data, error } = await supabase
+  // Busca jogos + conta empréstimos ativos por jogo
+  const { data: games, error } = await supabase
     .from('games')
-    .select('*')
+    .select(`
+      *,
+      active_loans:loans(count)
+    `)
     .eq('unidade', unidade)
+    .eq('loans.returned', false)
     .order('name')
 
   if (error) return NextResponse.json({ error }, { status: 500 })
-  return NextResponse.json(data)
+
+  // Calcula available_copies para cada jogo
+  const gamesWithAvailability = games.map((game: any) => {
+    const activeLoans = game.active_loans?.[0]?.count ?? 0
+    return {
+      ...game,
+      active_loans: undefined,
+      available_copies: Math.max(0, game.total_copies - activeLoans),
+    }
+  })
+
+  return NextResponse.json(gamesWithAvailability)
 }
 
 export async function POST(req: Request) {
@@ -31,4 +47,4 @@ export async function POST(req: Request) {
 
   if (error) return NextResponse.json({ error }, { status: 500 })
   return NextResponse.json(data)
-} 
+}

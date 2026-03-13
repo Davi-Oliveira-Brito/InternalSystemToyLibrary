@@ -1,0 +1,166 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 20px;
+  animation: fadeIn 0.15s ease;
+}
+
+.modal {
+  background: #303440;
+  border-radius: 20px;
+  width: 100%;
+  max-width: 420px;
+  padding: 28px 24px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  animation: slideUp 0.2s ease;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.title {
+  font-size: 22px;
+  font-weight: 700;
+  color: #84D574;
+  margin: 0;
+}
+
+.closeBtn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.7;
+  transition: opacity 0.15s ease;
+
+  &:hover {
+    opacity: 1;
+  }
+}
+
+.fields {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.label {
+  font-size: 13px;
+  color: #AAAAAA;
+  font-weight: 500;
+}
+
+.input {
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  outline: none;
+  color: #ffffff;
+  font-size: 15px;
+  font-family: inherit;
+  padding: 6px 0;
+  transition: border-color 0.2s ease;
+
+  &::placeholder {
+    color: #555;
+  }
+
+  &:focus {
+    border-bottom-color: #84D574;
+  }
+
+  // Remove number input arrows
+  &[type='number']::-webkit-inner-spin-button,
+  &[type='number']::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+  }
+}
+
+.error {
+  font-size: 13px;
+  color: #F17878;
+  margin: 0;
+}
+
+.actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+}
+
+%btn-base {
+  padding: 10px 28px;
+  border-radius: 20px;
+  font-size: 15px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  transition: filter 0.15s ease, transform 0.1s ease;
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  &:not(:disabled):hover {
+    filter: brightness(1.1);
+  }
+
+  &:not(:disabled):active {
+    transform: scale(0.97);
+  }
+}
+
+.btnCancel {
+  @extend %btn-base;
+  background-color: #F17878;
+  color: #ffffff;
+}
+
+.btnSave {
+  @extend %btn-base;
+  background-color: #84D574;
+  color: #1a1a1a;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (min-width: 1024px) {
+  .modal {
+    padding: 32px 28px 28px;
+  }
+
+  .title {
+    font-size: 24px;
+  }
+}
