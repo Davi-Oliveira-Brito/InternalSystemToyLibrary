@@ -11,7 +11,6 @@ interface ActionBarProps {
   available: number;
   loaned: number;
   onFilterCategory?: () => void;
-  onFilterOrder?: () => void;
 }
 
 export default function ActionBar({
@@ -22,7 +21,6 @@ export default function ActionBar({
   available,
   loaned,
   onFilterCategory,
-  onFilterOrder,
 }: ActionBarProps) {
   return (
     <div className={styles.wrapper}>
@@ -43,25 +41,20 @@ export default function ActionBar({
         </div>
 
         <button className={styles.filterBtn} onClick={onFilterCategory}>
-          Categoria
-          <Image src="/arrow.svg" alt="" width={12} height={12} />
-        </button>
-
-        <button className={styles.filterBtn} onClick={onFilterOrder}>
-          Ordenar
-          <Image src="/arrow.svg" alt="" width={12} height={12} />
+          <span className={styles.filterLabel}>Categoria</span>
+          <Image src="/arrow.svg" alt="Filtrar categoria" width={12} height={12} />
         </button>
       </div>
 
       <div className={styles.stats}>
-        <span className={styles.statItem}>
-          Total: <strong className={styles.statWhite}>{total}</strong>
+        <span className={styles.statWhite}>
+          Total: <strong>{total}</strong>
         </span>
-        <span className={styles.statItem}>
-          Disponíveis: <strong className={styles.statGreen}>{available}</strong>
+        <span className={styles.statGreen}>
+          Disponíveis: <strong>{available}</strong>
         </span>
-        <span className={styles.statItem}>
-          Emprestados: <strong className={styles.statRed}>{loaned}</strong>
+        <span className={styles.statRed}>
+          Emprestados: <strong>{loaned}</strong>
         </span>
       </div>
     </div>

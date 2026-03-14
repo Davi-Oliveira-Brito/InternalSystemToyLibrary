@@ -16,7 +16,7 @@
 // Image — ~40% do card, igual ao protótipo
 .imageWrapper {
   position: relative;
-  width: 40%;
+  width: 45%;
   min-width: 40%;
   flex-shrink: 0;
   height: 100%;
@@ -71,21 +71,25 @@
 // Actions — sempre na base do card
 .actions {
   display: flex;
-  gap: 8px;
+  gap: 6px;
   margin-top: 10px;
 }
 
 %btn-base {
+  flex: 1;
   display: inline-flex;
   align-items: center;
-  gap: 5px;
-  padding: 7px 16px;
+  justify-content: center;
+  gap: 4px;
+  padding: 7px 8px;
   border-radius: 8px;
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 600;
   cursor: pointer;
   border: none;
   white-space: nowrap;
+  min-width: 0;
+  overflow: hidden;
   transition: filter 0.15s ease, transform 0.1s ease;
 
   &:hover {
