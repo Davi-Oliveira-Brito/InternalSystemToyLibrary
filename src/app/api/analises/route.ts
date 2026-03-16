@@ -5,7 +5,7 @@ export async function GET(req: Request) {
   const { searchParams } = new URL(req.url)
   const unidade_slug = searchParams.get('unidade_slug')
 
-  // Início da semana (segunda-feira)
+  // Início da semana
   const now = new Date()
   const day = now.getDay()
   const diffToMonday = (day === 0 ? -6 : 1 - day)
@@ -36,7 +36,7 @@ export async function GET(req: Request) {
     .eq('unidade_slug', unidade_slug)
     .eq('returned', false)
 
-  // --- Cálculos locais ---
+  // Calculos Locais
   const totalLoans = weekLoans.length
   const totalReturns = weekLoans.filter((l: any) => l.returned).length
 

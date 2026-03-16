@@ -8,6 +8,15 @@ export const GAME_CATEGORIES: GameCategory[] = [
   'Estratégia',
 ]
 
+export const UNIDADES = [
+  { slug: 'morumbi',      name: 'Unidade Morumbi' },
+  { slug: 'valinhos',     name: 'Unidade Valinhos' },
+  { slug: 'panamby',      name: 'Unidade Panamby' },
+  { slug: 'vila-andrade', name: 'Unidade Vila Andrade' },
+] as const
+
+export type UnidadeSlug = typeof UNIDADES[number]['slug']
+
 export interface Unidade {
   id: string
   slug: string

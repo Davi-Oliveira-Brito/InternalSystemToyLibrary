@@ -8,6 +8,16 @@
   min-height: 100px;
 }
 
+// Variante clara
+.cardLight {
+  background-color: #ffffff;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+
+  .label { color: #888888; }
+  .sub   { color: #aaaaaa; }
+  .default { color: #111111; }
+}
+
 .label {
   font-size: 13px;
   color: #AAAAAA;
@@ -29,13 +39,11 @@
   margin-top: 2px;
 }
 
-// Accents
 .green  { color: #77FF5C; }
 .red    { color: #FF4649; }
 .yellow { color: #F6FF4A; }
 .default { color: #ffffff; }
 
-// Skeleton
 .skeletonLabel {
   height: 12px;
   width: 60%;

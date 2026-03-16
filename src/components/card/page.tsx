@@ -9,11 +9,12 @@ interface Props {
   subtitle: string
   image: string
   href: string
+  variant?: 'dark' | 'light'
 }
 
-export default function MenuCard({ title, subtitle, image, href }: Props) {
+export default function MenuCard({ title, subtitle, image, href, variant = 'dark' }: Props) {
   return (
-    <Link href={href} className={styles.card}>
+    <Link href={href} className={`${styles.card} ${variant === 'light' ? styles.cardLight : ''}`}>
       <div className={styles.image}>
         <Image
           src={image}

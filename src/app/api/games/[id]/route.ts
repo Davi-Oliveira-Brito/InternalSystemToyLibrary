@@ -1,8 +1,6 @@
 import { NextResponse } from 'next/server'
 import { supabase } from '@/lib/supabase'
 
-// Extrai o path do Storage a partir da URL pública
-// Ex: https://xxx.supabase.co/storage/v1/object/public/games/foto.jpg → games/foto.jpg
 function extractStoragePath(url: string): { bucket: string; path: string } | null {
   try {
     const match = url.match(/\/storage\/v1\/object\/public\/([^/]+)\/(.+)/)
@@ -31,7 +29,6 @@ export async function PUT(
   const { id } = await params
   const body = await req.json()
 
-  // Busca imagem atual para cleanup
   const { data: current } = await supabase
     .from('games')
     .select('image_url')

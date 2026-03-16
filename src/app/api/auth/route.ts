@@ -4,7 +4,7 @@ import { supabase } from '@/lib/supabase'
 export async function POST(req: Request) {
   const { email, password } = await req.json()
 
-  // Tenta login como admin primeiro
+  // login como admin primeiro
   const { data: admin } = await supabase
     .from('admins')
     .select('*')
@@ -23,7 +23,7 @@ export async function POST(req: Request) {
     })
   }
 
-  // Tenta login como usuário (estagiário)
+  // login como usuário (estagiário)
   const { data: user } = await supabase
     .from('users')
     .select('*')

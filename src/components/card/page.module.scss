@@ -21,6 +21,21 @@
   }
 }
 
+// Variante clara
+.cardLight {
+  background: #ffffff;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+
+  &:hover {
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.13);
+    opacity: 1;
+  }
+
+  .title   { color: #111111; }
+  .subtitle { color: #555555; }
+  .saiba   { color: #888888; }
+}
+
 .image {
   position: relative;
   width: 130px;
@@ -34,9 +49,7 @@
   }
 }
 
-.img {
-  object-fit: cover;
-}
+.img { object-fit: cover; }
 
 .content {
   flex: 1;
@@ -53,7 +66,7 @@
 .title {
   font-size: 16px;
   font-weight: 700;
-  color: #FFFFFF;
+  color: #ffffff;
   margin-bottom: 0.4rem;
   line-height: 1.3;
 
