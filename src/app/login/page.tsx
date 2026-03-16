@@ -19,16 +19,24 @@ export default function LoginPage() {
     const res = await fetch('/api/auth', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email: email, password }),
+      body: JSON.stringify({ email, password }),
     })
 
     const data = await res.json()
 
     if (data.ok) {
       sessionStorage.setItem('auth', '1')
-      sessionStorage.setItem('unidade', data.unidade)
+      sessionStorage.setItem('role', data.role)
+      sessionStorage.setItem('name', data.name)
       sessionStorage.setItem('email', data.email)
-      router.push('/home')
+      sessionStorage.setItem('avatar_url', data.avatar_url ?? '')
+      sessionStorage.setItem('unidade_slug', data.unidade_slug ?? '')
+
+      if (data.role === 'admin') {
+        router.push('/admin')
+      } else {
+        router.push('/home')
+      }
     } else {
       setError('Email ou senha incorretos.')
     }

@@ -13,7 +13,11 @@
   opacity: 0.5;
 }
 
-// Image — ~40% do card, igual ao protótipo
+.allLoaned {
+  opacity: 0.75;
+}
+
+// Image
 .imageWrapper {
   position: relative;
   width: 45%;
@@ -68,13 +72,14 @@
   color: #B8121C !important;
 }
 
-// Actions — sempre na base do card
+// Actions
 .actions {
   display: flex;
   gap: 6px;
   margin-top: 10px;
 }
 
+// Base compartilhada
 %btn-base {
   flex: 1;
   display: inline-flex;
@@ -90,17 +95,20 @@
   white-space: nowrap;
   min-width: 0;
   overflow: hidden;
+  font-family: inherit;
   transition: filter 0.15s ease, transform 0.1s ease;
 
-  &:hover {
-    filter: brightness(1.15);
-  }
-
-  &:active {
-    transform: scale(0.97);
+  &:hover { filter: brightness(1.15); }
+  &:active { transform: scale(0.97); }
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    filter: none;
+    transform: none;
   }
 }
 
+// Manage mode
 .btnEdit {
   @extend %btn-base;
   background-color: #2E7D32;
@@ -113,22 +121,17 @@
   color: #ffffff;
 }
 
+// Loan mode
 .btnLoan {
   @extend %btn-base;
-  background-color: #B8121C;
-  color: #ffffff;
-  width: 100%;
-  justify-content: center;
-  padding: 9px 14px;
-  font-size: 14px;
+  background-color: #84D574;
+  color: #FFFFFF;
+}
 
-  &:disabled {
-    background-color: #444;
-    color: #888;
-    cursor: not-allowed;
-    filter: none;
-    transform: none;
-  }
+.btnReturn {
+  @extend %btn-base;
+  background-color: #F17878;
+  color: #ffffff;
 }
 
 // Skeleton
@@ -176,17 +179,8 @@
   100% { background-position: -200% 0; }
 }
 
-// Desktop — card com largura máxima, nunca estica infinito
 @media (min-width: 1024px) {
-  .card {
-    height: 180px;
-  }
-
-  .name {
-    font-size: 20px;
-  }
-
-  .infoRow {
-    font-size: 14px;
-  }
+  .card { height: 180px; }
+  .name { font-size: 20px; }
+  .infoRow { font-size: 14px; }
 }

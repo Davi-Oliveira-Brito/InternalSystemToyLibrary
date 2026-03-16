@@ -7,6 +7,7 @@ import MenuCard from '@/components/card/page'
 
 export default function HomePage() {
   const router = useRouter()
+  const [name, setName] = useState('')
   const [email, setEmail] = useState('')
 
   useEffect(() => {
@@ -14,10 +15,10 @@ export default function HomePage() {
       router.push('/login')
       return
     }
-    setEmail(sessionStorage.getItem('email') || '')
+    setName(sessionStorage.getItem('name') || '')
   }, [])
 
-  const firstName = email.split(' ')[0]
+  const firstName = name.split(' ')[0]
   //username
   const initial = firstName.charAt(0).toUpperCase()
 

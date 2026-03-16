@@ -1,18 +1,48 @@
+export type GameCategory = 'Cartas' | 'Tabuleiro' | 'RPG' | 'Cooperativo' | 'Estratégia'
+
+export const GAME_CATEGORIES: GameCategory[] = [
+  'Cartas',
+  'Tabuleiro',
+  'RPG',
+  'Cooperativo',
+  'Estratégia',
+]
+
+export interface Unidade {
+  id: string
+  slug: string
+  name: string
+  created_at: string
+}
+
+export interface Admin {
+  id: string
+  name: string
+  email: string
+  password: string
+  avatar_url: string | null
+  created_at: string
+}
+
 export interface User {
   id: string
-  username: string
+  name: string
+  email: string
   password: string
-  unidade: string
+  unidade_slug: string
+  avatar_url: string | null
   created_at: string
 }
 
 export interface Game {
   id: string
   name: string
-  image: string | null
+  image_url: string | null
+  category: GameCategory | null
   total_copies: number
-  unidade: string
+  unidade_slug: string
   created_at: string
+  available_copies: number
 }
 
 export interface Loan {
@@ -22,8 +52,16 @@ export interface Loan {
   student_name: string
   student_ra: string
   student_class: string
-  unidade: string
+  unidade_slug: string
   loaned_at: string
   returned: boolean
   returned_at: string | null
+}
+
+export interface SessionData {
+  role: 'admin' | 'user'
+  name: string
+  email: string
+  avatar_url: string | null
+  unidade_slug: string | null
 }

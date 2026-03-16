@@ -1,6 +1,29 @@
 import { NextResponse } from 'next/server'
 import { supabase } from '@/lib/supabase'
 
+// Extrai o path do Storage a partir da URL pública
+// Ex: https://xxx.supabase.co/storage/v1/object/public/games/foto.jpg → games/foto.jpg
+function extractStoragePath(url: string): { bucket: string; path: string } | null {
+  try {
+    const match = url.match(/\/storage\/v1\/object\/public\/([^/]+)\/(.+)/)
+    if (!match) return null
+    return { bucket: match[1], path: match[2] }
+  } catch {
+    return null
+  }
+}
+
+function isSupabaseUrl(url: string | null): boolean {
+  if (!url) return false
+  return url.includes('.supabase.co/storage')
+}
+
+async function deleteStorageImage(url: string) {
+  const extracted = extractStoragePath(url)
+  if (!extracted) return
+  await supabase.storage.from(extracted.bucket).remove([extracted.path])
+}
+
 export async function PUT(
   req: Request,
   { params }: { params: Promise<{ id: string }> }
@@ -8,11 +31,19 @@ export async function PUT(
   const { id } = await params
   const body = await req.json()
 
+  // Busca imagem atual para cleanup
+  const { data: current } = await supabase
+    .from('games')
+    .select('image_url')
+    .eq('id', id)
+    .single()
+
   const { data, error } = await supabase
     .from('games')
     .update({
       name: body.name,
-      image: body.image || null,
+      image_url: body.image_url || null,
+      category: body.category || null,
       total_copies: body.total_copies,
     })
     .eq('id', id)
@@ -20,6 +51,14 @@ export async function PUT(
     .single()
 
   if (error) return NextResponse.json({ error }, { status: 500 })
+
+  // Se trocou a imagem e a antiga era do Storage, apaga
+  const oldUrl = current?.image_url
+  const newUrl = body.image_url
+  if (oldUrl && oldUrl !== newUrl && isSupabaseUrl(oldUrl)) {
+    await deleteStorageImage(oldUrl)
+  }
+
   return NextResponse.json(data)
 }
 
@@ -29,11 +68,24 @@ export async function DELETE(
 ) {
   const { id } = await params
 
+  // Busca imagem antes de deletar
+  const { data: game } = await supabase
+    .from('games')
+    .select('image_url')
+    .eq('id', id)
+    .single()
+
   const { error } = await supabase
     .from('games')
     .delete()
     .eq('id', id)
 
   if (error) return NextResponse.json({ error }, { status: 500 })
+
+  // Apaga imagem do Storage se for do Supabase
+  if (game?.image_url && isSupabaseUrl(game.image_url)) {
+    await deleteStorageImage(game.image_url)
+  }
+
   return NextResponse.json({ ok: true })
 }

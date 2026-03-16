@@ -6,29 +6,35 @@ import styles from './page.module.scss';
 interface GameCardProps {
   id: string;
   name: string;
-  image: string;
+  image_url: string | null;
+  category?: string | null;
   totalCopies: number;
   availableCopies: number;
   mode: 'manage' | 'loan';
   onEdit?: () => void;
   onDelete?: () => void;
   onLoan?: () => void;
+  onReturn?: () => void;
   isLoading?: boolean;
 }
 
 export default function GameCard({
   id,
   name,
-  image,
+  image_url,
+  category,
   totalCopies,
   availableCopies,
   mode,
   onEdit,
   onDelete,
   onLoan,
+  onReturn,
   isLoading = false,
 }: GameCardProps) {
-  const unavailable = availableCopies === 0;
+  const allLoaned = availableCopies === 0;
+  const someLoaned = availableCopies < totalCopies;
+  const imageSrc = image_url && image_url.trim() !== '' ? image_url : '/placeholder-game.png';
 
   if (isLoading) {
     return (
@@ -45,14 +51,15 @@ export default function GameCard({
   }
 
   return (
-    <div className={`${styles.card} ${unavailable && mode === 'loan' ? styles.unavailable : ''}`}>
+    <div className={`${styles.card} ${allLoaned && mode === 'loan' ? styles.allLoaned : ''}`}>
       <div className={styles.imageWrapper}>
         <Image
-          src={image || '/placeholder-game.png'}
+          src={imageSrc}
           alt={name}
           fill
           className={styles.image}
           sizes="(max-width: 768px) 40vw, 200px"
+          unoptimized={imageSrc.startsWith('https://')}
         />
       </div>
 
@@ -60,12 +67,17 @@ export default function GameCard({
         <h2 className={styles.name}>{name}</h2>
 
         <div className={styles.info}>
+          {category && (
+            <span className={styles.infoRow}>
+              Categoria: <strong>{category}</strong>
+            </span>
+          )}
           <span className={styles.infoRow}>
             Total: <strong>{totalCopies}</strong>
           </span>
           <span className={styles.infoRow}>
             Disponível:{' '}
-            <strong className={availableCopies === 0 ? styles.zero : ''}>
+            <strong className={allLoaned ? styles.zero : ''}>
               {availableCopies}
             </strong>
           </span>
@@ -75,25 +87,29 @@ export default function GameCard({
           {mode === 'manage' && (
             <>
               <button className={styles.btnEdit} onClick={onEdit} aria-label="Editar jogo">
-                <EditIcon />
-                Editar
+                <EditIcon /> Editar
               </button>
               <button className={styles.btnDelete} onClick={onDelete} aria-label="Excluir jogo">
-                <CloseIcon />
-                Excluir
+                <CloseIcon /> Excluir
               </button>
             </>
           )}
 
           {mode === 'loan' && (
-            <button
-              className={styles.btnLoan}
-              onClick={onLoan}
-              disabled={unavailable}
-              aria-label="Emprestar jogo"
-            >
-              {unavailable ? 'Indisponível' : 'Emprestar'}
-            </button>
+            <>
+              {!allLoaned && (
+                <button className={`${styles.btnLoan} ${someLoaned ? styles.btnHalf : styles.btnFull}`}
+                  onClick={onLoan}>
+                  Emprestar
+                </button>
+              )}
+              {someLoaned && (
+                <button className={`${styles.btnReturn} ${allLoaned ? styles.btnFull : styles.btnHalf}`}
+                  onClick={onReturn}>
+                  Devolver
+                </button>
+              )}
+            </>
           )}
         </div>
       </div>

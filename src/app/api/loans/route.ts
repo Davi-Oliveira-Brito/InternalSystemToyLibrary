@@ -3,12 +3,12 @@ import { supabase } from '@/lib/supabase'
 
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url)
-  const unidade = searchParams.get('unidade')
+  const unidade_slug = searchParams.get('unidade_slug')
 
   const { data, error } = await supabase
     .from('loans')
     .select('*')
-    .eq('unidade', unidade)
+    .eq('unidade_slug', unidade_slug)
     .eq('returned', false)
     .order('loaned_at', { ascending: false })
 
@@ -27,7 +27,7 @@ export async function POST(req: Request) {
       student_name: body.student_name,
       student_ra: body.student_ra,
       student_class: body.student_class,
-      unidade: body.unidade,
+      unidade_slug: body.unidade_slug,
     })
     .select()
     .single()

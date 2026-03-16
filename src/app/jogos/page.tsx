@@ -3,6 +3,7 @@
 import { useEffect, useState, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import styles from './page.module.scss';
+import { Game, GameCategory } from '@/types';
 
 import Banner from '@/components/banner/page';
 import ActionBar from '@/components/actionBar/page';
@@ -11,45 +12,32 @@ import GameModal from '@/components/modals/gameModal/page';
 import EditGameModal from '@/components/modals/editGameModal/page';
 import ConfirmDeleteModal from '@/components/modals/deleteGamemodal/page';
 
-interface Game {
-  id: string;
-  name: string;
-  image: string;
-  total_copies: number;
-  unidade: string;
-  available_copies: number; // calculado via join com loans
-}
-
 export default function GerenciarJogos() {
   const router = useRouter();
 
-  const [email, setEmail] = useState('');
-  const [unidade, setUnidade] = useState('');
+  const [name, setName] = useState('');
+  const [unidade_slug, setUnidadeSlug] = useState('');
   const [games, setGames] = useState<Game[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState<GameCategory | null>(null);
 
-  // Modal state
   const [showAddModal, setShowAddModal] = useState(false);
   const [editingGame, setEditingGame] = useState<Game | null>(null);
   const [deletingGame, setDeletingGame] = useState<Game | null>(null);
   const [deleteLoading, setDeleteLoading] = useState(false);
 
-  // Auth guard
   useEffect(() => {
     const auth = sessionStorage.getItem('auth');
-    if (!auth) {
-      router.push('/login');
-      return;
-    }
-    setEmail(sessionStorage.getItem('email') || '');
-    setUnidade(sessionStorage.getItem('unidade') || '');
+    if (!auth) { router.push('/login'); return; }
+    setName(sessionStorage.getItem('name') || '');
+    setUnidadeSlug(sessionStorage.getItem('unidade_slug') || '');
   }, [router]);
 
-  const fetchGames = async (currentUnidade: string) => {
+  const fetchGames = async (slug: string) => {
     setLoading(true);
     try {
-      const res = await fetch(`/api/games?unidade=${currentUnidade}`);
+      const res = await fetch(`/api/games?unidade_slug=${slug}`);
       const data = await res.json();
       setGames(data);
     } catch (err) {
@@ -60,22 +48,21 @@ export default function GerenciarJogos() {
   };
 
   useEffect(() => {
-    if (!unidade) return;
-    fetchGames(unidade);
-  }, [unidade]);
+    if (!unidade_slug) return;
+    fetchGames(unidade_slug);
+  }, [unidade_slug]);
 
-  // Stats
   const total = games.length;
   const available = games.filter((g) => g.available_copies > 0).length;
   const loaned = games.reduce((acc, g) => acc + (g.total_copies - g.available_copies), 0);
 
-  // Filtered list
   const filtered = useMemo(() => {
-    if (!search.trim()) return games;
-    return games.filter((g) =>
-      g.name.toLowerCase().includes(search.toLowerCase())
-    );
-  }, [games, search]);
+    return games.filter((g) => {
+      const matchSearch = !search.trim() || g.name.toLowerCase().includes(search.toLowerCase());
+      const matchCategory = !selectedCategory || g.category === selectedCategory;
+      return matchSearch && matchCategory;
+    });
+  }, [games, search, selectedCategory]);
 
   const handleDelete = async () => {
     if (!deletingGame) return;
@@ -95,7 +82,7 @@ export default function GerenciarJogos() {
     <main className={styles.page}>
       <Banner
         backgroundImage="/cards/GerenciarJogos.png"
-        email={email}
+        username={name}
         title="Gerenciar Jogos"
         subtitle="Cadastre, edite e organize os jogos disponíveis"
       />
@@ -107,35 +94,30 @@ export default function GerenciarJogos() {
         total={total}
         available={available}
         loaned={loaned}
+        selectedCategory={selectedCategory}
+        onCategoryChange={setSelectedCategory}
       />
 
       <section className={styles.list}>
         {loading
           ? Array.from({ length: 4 }).map((_, i) => (
-              <GameCard
-                key={i}
-                id=""
-                name=""
-                image=""
-                totalCopies={0}
-                availableCopies={0}
-                mode="manage"
-                isLoading
-              />
-            ))
+            <GameCard key={i} id="" name="" image_url={null} totalCopies={0}
+              availableCopies={0} category="" mode="manage" isLoading />
+          ))
           : filtered.map((game) => (
-              <GameCard
-                key={game.id}
-                id={game.id}
-                name={game.name}
-                image={game.image}
-                totalCopies={game.total_copies}
-                availableCopies={game.available_copies}
-                mode="manage"
-                onEdit={() => setEditingGame(game)}
-                onDelete={() => setDeletingGame(game)}
-              />
-            ))}
+            <GameCard
+              key={game.id}
+              id={game.id}
+              name={game.name}
+              image_url={game.image_url}
+              category={game.category}
+              totalCopies={game.total_copies}
+              availableCopies={game.available_copies}
+              mode="manage"
+              onEdit={() => setEditingGame(game)}
+              onDelete={() => setDeletingGame(game)}
+            />
+          ))}
 
         {!loading && filtered.length === 0 && (
           <p className={styles.empty}>Nenhum jogo encontrado.</p>
@@ -143,27 +125,22 @@ export default function GerenciarJogos() {
       </section>
 
       {showAddModal && (
-        <GameModal
-          unidade={unidade}
+        <GameModal unidade_slug={unidade_slug}
           onClose={() => setShowAddModal(false)}
-          onSuccess={() => fetchGames(unidade)}
-        />
+          onSuccess={() => fetchGames(unidade_slug)} />
       )}
 
       {editingGame && (
-        <EditGameModal
-          game={editingGame}
+        <EditGameModal game={editingGame}
           onClose={() => setEditingGame(null)}
-          onSuccess={() => fetchGames(unidade)}
-        />
+          onSuccess={() => fetchGames(unidade_slug)} />
       )}
+
       {deletingGame && (
-        <ConfirmDeleteModal
-          gameName={deletingGame.name}
+        <ConfirmDeleteModal gameName={deletingGame.name}
           onClose={() => setDeletingGame(null)}
           onConfirm={handleDelete}
-          loading={deleteLoading}
-        />
+          loading={deleteLoading} />
       )}
     </main>
   );

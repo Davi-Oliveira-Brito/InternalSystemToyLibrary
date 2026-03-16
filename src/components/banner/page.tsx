@@ -7,15 +7,14 @@ import styles from './page.module.scss';
 
 interface BannerProps {
   backgroundImage: string;
-  email: string;
+  username: string;
   title: string;
   subtitle: string;
 }
 
-export default function Banner({ backgroundImage, email, title, subtitle }: BannerProps) {
+export default function Banner({ backgroundImage, username, title, subtitle }: BannerProps) {
   const router = useRouter();
-  const initial = email.charAt(0).toUpperCase();
-  //username
+  const initial = username ? username.charAt(0).toUpperCase() : '?';
 
   const handleAvatarClick = () => {
     router.push('/perfil');

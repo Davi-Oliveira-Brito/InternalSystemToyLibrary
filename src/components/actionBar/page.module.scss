@@ -9,12 +9,10 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  // Impede overflow horizontal no mobile
   min-width: 0;
-  overflow: hidden;
+  overflow: visible;
 }
 
-// Add button
 .addButton {
   width: 40px;
   height: 40px;
@@ -30,16 +28,10 @@
   flex-shrink: 0;
   transition: background-color 0.15s ease, transform 0.1s ease;
 
-  &:hover {
-    background-color: #3d4150;
-  }
-
-  &:active {
-    transform: scale(0.95);
-  }
+  &:hover { background-color: #3d4150; }
+  &:active { transform: scale(0.95); }
 }
 
-// Search — ocupa o espaço restante
 .searchWrapper {
   flex: 1;
   min-width: 0;
@@ -54,9 +46,7 @@
   overflow: hidden;
 }
 
-.searchIcon {
-  flex-shrink: 0;
-}
+.searchIcon { flex-shrink: 0; }
 
 .searchInput {
   flex: 1;
@@ -68,12 +58,15 @@
   color: #ffffff;
   font-family: inherit;
 
-  &::placeholder {
-    color: #AAAAAA;
-  }
+  &::placeholder { color: #AAAAAA; }
 }
 
-// Filtro — só seta em telas pequenas, texto+seta em telas maiores
+// Filtro
+.filterWrapper {
+  position: relative;
+  flex-shrink: 0;
+}
+
 .filterBtn {
   display: inline-flex;
   align-items: center;
@@ -87,17 +80,64 @@
   white-space: nowrap;
   padding: 4px 2px;
   font-family: inherit;
-  flex-shrink: 0;
   transition: color 0.15s ease;
-  
+
+  &:hover { color: #ffffff; }
+}
+
+.filterActive {
+  color: #84D574;
+
+  &:hover { color: #84D574; }
+}
+
+.filterLabel { display: none; }
+
+.filterArrow {
+  transition: transform 0.2s ease;
+}
+
+.filterArrowOpen {
+  transform: rotate(180deg);
+}
+
+// Dropdown
+.dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  background: #303440;
+  border-radius: 12px;
+  padding: 6px;
+  min-width: 140px;
+  z-index: 50;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  animation: fadeIn 0.15s ease;
+}
+
+.dropdownItem {
+  display: block;
+  width: 100%;
+  text-align: left;
+  background: transparent;
+  border: none;
+  color: #D9D9D9;
+  font-size: 14px;
+  font-family: inherit;
+  padding: 9px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.1s ease, color 0.1s ease;
+
   &:hover {
+    background-color: rgba(255, 255, 255, 0.07);
     color: #ffffff;
   }
 }
 
-// Esconde o texto "Categoria" em telas pequenas — só a seta fica
-.filterLabel {
-  display: none;
+.dropdownItemActive {
+  color: #84D574;
+  font-weight: 600;
 }
 
 // Stats
@@ -107,36 +147,19 @@
   padding: 2px 0;
 }
 
-.statWhite,
-.statGreen,
-.statRed {
+.statWhite, .statGreen, .statRed {
   font-size: 13px;
-
-  strong {
-    font-weight: 700;
-  }
+  strong { font-weight: 700; }
 }
 
-.statWhite {
-  color: #F6FF4A;
-}
+.statWhite { color: #F6FF4A; }
+.statGreen { color: #77FF5C; }
+.statRed   { color: #FF4649; }
 
-.statGreen {
-  color: #77FF5C;
-}
-
-.statRed {
-  color: #FF4649;
-}
-
-// A partir de 400px já aparece o label "Categoria"
 @media (min-width: 400px) {
-  .filterLabel {
-    display: inline;
-  }
+  .filterLabel { display: inline; }
 }
 
-// Desktop
 @media (min-width: 1024px) {
   .wrapper {
     padding: 24px 40px 0;
@@ -145,13 +168,12 @@
     width: 100%;
   }
 
-  .searchInput {
-    font-size: 15px;
-  }
+  .searchInput { font-size: 15px; }
 
-  .statWhite,
-  .statGreen,
-  .statRed {
-    font-size: 14px;
-  }
+  .statWhite, .statGreen, .statRed { font-size: 14px; }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: translateY(0); }
 }

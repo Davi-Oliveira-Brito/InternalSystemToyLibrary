@@ -1,6 +1,8 @@
 'use client';
 
+import { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
+import { GAME_CATEGORIES, GameCategory } from '@/types';
 import styles from './page.module.scss';
 
 interface ActionBarProps {
@@ -10,7 +12,8 @@ interface ActionBarProps {
   total: number;
   available: number;
   loaned: number;
-  onFilterCategory?: () => void;
+  selectedCategory: GameCategory | null;
+  onCategoryChange: (category: GameCategory | null) => void;
 }
 
 export default function ActionBar({
@@ -20,8 +23,28 @@ export default function ActionBar({
   total,
   available,
   loaned,
-  onFilterCategory,
+  selectedCategory,
+  onCategoryChange,
 }: ActionBarProps) {
+  const [open, setOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  // Fecha ao clicar fora
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+        setOpen(false);
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const handleSelect = (cat: GameCategory | null) => {
+    onCategoryChange(cat);
+    setOpen(false);
+  };
+
   return (
     <div className={styles.wrapper}>
       <div className={styles.controls}>
@@ -40,10 +63,43 @@ export default function ActionBar({
           />
         </div>
 
-        <button className={styles.filterBtn} onClick={onFilterCategory}>
-          <span className={styles.filterLabel}>Categoria</span>
-          <Image src="/arrow.svg" alt="Filtrar categoria" width={12} height={12} />
-        </button>
+        <div className={styles.filterWrapper} ref={dropdownRef}>
+          <button
+            className={`${styles.filterBtn} ${selectedCategory ? styles.filterActive : ''}`}
+            onClick={() => setOpen((v) => !v)}
+          >
+            <span className={styles.filterLabel}>
+              {selectedCategory || 'Categoria'}
+            </span>
+            <Image
+              src="/arrow.svg"
+              alt=""
+              width={12}
+              height={12}
+              className={`${styles.filterArrow} ${open ? styles.filterArrowOpen : ''}`}
+            />
+          </button>
+
+          {open && (
+            <div className={styles.dropdown}>
+              <button
+                className={`${styles.dropdownItem} ${!selectedCategory ? styles.dropdownItemActive : ''}`}
+                onClick={() => handleSelect(null)}
+              >
+                Todas
+              </button>
+              {GAME_CATEGORIES.map((cat) => (
+                <button
+                  key={cat}
+                  className={`${styles.dropdownItem} ${selectedCategory === cat ? styles.dropdownItemActive : ''}`}
+                  onClick={() => handleSelect(cat)}
+                >
+                  {cat}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
 
       <div className={styles.stats}>
