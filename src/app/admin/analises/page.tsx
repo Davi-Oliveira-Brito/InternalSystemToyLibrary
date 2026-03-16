@@ -25,7 +25,7 @@ interface Analytics {
 export default function AdminAnalises() {
   const router = useRouter();
   const [name, setName] = useState('');
-  const [selectedSlug, setSelectedSlug] = useState(UNIDADES[0].slug);
+  const [selectedSlug, setSelectedSlug] = useState<string>(UNIDADES[0].slug);
   const [data, setData] = useState<Analytics | null>(null);
   const [loading, setLoading] = useState(true);
 
