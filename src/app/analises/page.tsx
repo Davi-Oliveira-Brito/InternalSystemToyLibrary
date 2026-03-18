@@ -25,6 +25,7 @@ export default function Analises() {
   const router = useRouter();
 
   const [name, setName] = useState('');
+  const [avatar, setAvatar] = useState('')
   const [unidade_slug, setUnidadeSlug] = useState('');
   const [data, setData] = useState<Analytics | null>(null);
   const [loading, setLoading] = useState(true);
@@ -33,6 +34,7 @@ export default function Analises() {
     const auth = sessionStorage.getItem('auth');
     if (!auth) { router.push('/login'); return; }
     setName(sessionStorage.getItem('name') || '');
+    setAvatar(sessionStorage.getItem('avatar_url') || '');
     setUnidadeSlug(sessionStorage.getItem('unidade_slug') || '');
   }, [router]);
 
@@ -62,6 +64,7 @@ export default function Analises() {
       <Banner
         backgroundImage="/cards/Analises.png"
         username={name}
+        avatar={avatar}
         title="Resumo da Semana"
         subtitle="Visualize estatísticas de empréstimos"
       />

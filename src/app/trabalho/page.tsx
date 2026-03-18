@@ -15,6 +15,7 @@ export default function ModoTrabalho() {
   const router = useRouter();
 
   const [name, setName] = useState('');
+  const [avatar, setAvatar] = useState('')
   const [unidade_slug, setUnidadeSlug] = useState('');
   const [games, setGames] = useState<Game[]>([]);
   const [loans, setLoans] = useState<Loan[]>([]);
@@ -30,6 +31,7 @@ export default function ModoTrabalho() {
     const auth = sessionStorage.getItem('auth');
     if (!auth) { router.push('/login'); return; }
     setName(sessionStorage.getItem('name') || '');
+    setAvatar(sessionStorage.getItem('avatar_url') || '')
     setUnidadeSlug(sessionStorage.getItem('unidade_slug') || '');
   }, [router]);
 
@@ -89,8 +91,10 @@ export default function ModoTrabalho() {
       <Banner
         backgroundImage="/cards/ModoTrabalho.png"
         username={name}
+        avatar={avatar}
         title="Modo Trabalho"
         subtitle="Registre empréstimos e devoluções"
+        
       />
 
       <ActionBar

@@ -16,6 +16,7 @@ export default function GerenciarJogos() {
   const router = useRouter();
 
   const [name, setName] = useState('');
+  const [avatar, setAvatar] = useState('')
   const [unidade_slug, setUnidadeSlug] = useState('');
   const [games, setGames] = useState<Game[]>([]);
   const [loading, setLoading] = useState(true);
@@ -31,6 +32,7 @@ export default function GerenciarJogos() {
     const auth = sessionStorage.getItem('auth');
     if (!auth) { router.push('/login'); return; }
     setName(sessionStorage.getItem('name') || '');
+    setAvatar(sessionStorage.getItem('avatar_url') || '')
     setUnidadeSlug(sessionStorage.getItem('unidade_slug') || '');
   }, [router]);
 
@@ -82,6 +84,7 @@ export default function GerenciarJogos() {
     <main className={styles.page}>
       <Banner
         backgroundImage="/cards/GerenciarJogos.png"
+        avatar={avatar}
         username={name}
         title="Gerenciar Jogos"
         subtitle="Cadastre, edite e organize os jogos disponíveis"

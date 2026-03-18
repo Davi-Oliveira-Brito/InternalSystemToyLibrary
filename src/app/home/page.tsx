@@ -8,15 +8,20 @@ import MenuCard from '@/components/card/page'
 export default function HomePage() {
   const router = useRouter()
   const [name, setName] = useState('')
-  const [email, setEmail] = useState('')
+  const [avatar, setAvatar] = useState('')
 
   useEffect(() => {
     if (!sessionStorage.getItem('auth')) {
       router.push('/login')
       return
     }
+    setAvatar(sessionStorage.getItem('avatar_url') || '')
     setName(sessionStorage.getItem('name') || '')
   }, [])
+
+  const handleAvatarClick = () => {
+    router.push('/perfil');
+  };
 
   const firstName = name.split(' ')[0]
   //username
@@ -34,9 +39,23 @@ export default function HomePage() {
           className={styles.logo}
           priority
         />
-        <div className={styles.avatar}>
-          {initial}
-        </div>
+        <button className={styles.avatar} onClick={handleAvatarClick} aria-label="Ir para perfil">
+          {avatar ? (
+            <Image
+              src={avatar}
+              alt="Foto"
+              width={44}
+              height={44}
+              className={styles.avatar}
+              unoptimized
+              priority
+            />
+          ) : (
+            <div className={styles.avatarBtn}>
+              {initial}
+            </div>
+          )}
+        </button>
       </header>
 
       <div className={styles.greeting}>

@@ -35,24 +35,34 @@
 }
 
 .avatar {
-  width: 48px;
-  height: 48px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
-  background: #303440;
+  background-color: #303440;
+  border: 2px solid rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+  font-size: 18px;
+  font-weight: 700;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.25rem;
-  font-weight: 400;
-  color: #ffffff;
-  text-transform: uppercase;
+  cursor: pointer;
+  transition: border-color 0.2s ease, transform 0.15s ease;
   flex-shrink: 0;
 
-  @media (min-width: 768px) {
-    width: 56px;
-    height: 56px;
-    font-size: 1.5rem;
+  &:hover {
+    border-color: #B8121C;
+    transform: scale(1.05);
   }
+
+  &:active {
+    transform: scale(0.97);
+  }
+}
+
+.avatarBtn{
+  font-weight: 500;
+  color: #FFFFFF;
 }
 
 .greeting {
@@ -63,10 +73,10 @@
 
 .greetingText {
   font-size: 1.25rem;
-  font-weight: 400;
+  font-weight: 300;
   color: #ffffff;
 
-  strong { font-weight: 700; }
+  strong { font-weight: 500; }
 
   @media (min-width: 768px) {
     font-size: 1.5rem;
@@ -75,12 +85,12 @@
 
 .greetingSubtitle {
   font-size: 1rem;
-  color: #D9D9D9;
-  font-weight: 400;
+  color: #ffffff;
+  font-weight: 300;
 
   strong {
-    font-weight: 700;
-    font-style: italic;
+    font-weight: 400;
+    color: #AAAAAA;
   }
 
   @media (min-width: 768px) {
@@ -91,6 +101,7 @@
 .cards {
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: 1rem;
 
   @media (min-width: 768px) {
