@@ -16,6 +16,10 @@ export default function AdminBanner({ backgroundImage, username, title, subtitle
   const router = useRouter();
   const initial = username ? username.charAt(0).toUpperCase() : '?';
 
+  const handleAvatarClick = () => {
+    router.push('/admin/perfil');
+  };
+
   return (
     <div className={styles.banner} style={{ backgroundImage: `url(${backgroundImage})` }}>
       <div className={styles.overlay} />
@@ -34,7 +38,13 @@ export default function AdminBanner({ backgroundImage, username, title, subtitle
 
         <div className={styles.adminBadge}>
           <span className={styles.adminLabel}>ADMIN</span>
-          <div className={styles.avatar}>{initial}</div>
+          <button
+            className={styles.avatar}
+            onClick={handleAvatarClick}
+            aria-label="Ir para perfil"
+          >
+            {initial}
+          </button>
         </div>
       </div>
 

@@ -12,6 +12,14 @@
   border-radius: 0 0 24px 24px;
   overflow: hidden;
 }
+.avatar {
+  // ... estilos existentes
+  cursor: pointer;
+  border: none;
+  transition: opacity 0.15s ease;
+
+  &:hover { opacity: 0.85; }
+}
 
 .overlay {
   position: absolute;
