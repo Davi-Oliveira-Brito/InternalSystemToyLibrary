@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
-import { supabase } from '@/lib/supabase'
+import { supabaseAdmin } from '@/lib/supabase'
+import bcrypt from 'bcryptjs'
 
 export async function PUT(
   req: Request,
@@ -13,9 +14,9 @@ export async function PUT(
     email: body.email,
     unidade_slug: body.unidade_slug,
   }
-  if (body.password) updates.password = body.password
+  if (body.password) updates.password = await bcrypt.hash(body.password, 10)
 
-  const { data, error } = await supabase
+  const { data, error } = await supabaseAdmin
     .from('users')
     .update(updates)
     .eq('id', id)
@@ -32,7 +33,7 @@ export async function DELETE(
 ) {
   const { id } = await params
 
-  const { error } = await supabase
+  const { error } = await supabaseAdmin
     .from('users')
     .delete()
     .eq('id', id)

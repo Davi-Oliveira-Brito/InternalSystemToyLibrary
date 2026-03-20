@@ -11,6 +11,24 @@
   gap: 16px;
   padding: 20px 20px 0;
 }
+.logoutBtn {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #AAAAAA;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 6px 14px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.15s ease;
+  margin-left: auto;
+
+  &:hover {
+    border-color: #F17878;
+    color: #F17878;
+  }
+}
 
 .backBtn {
   background: transparent;

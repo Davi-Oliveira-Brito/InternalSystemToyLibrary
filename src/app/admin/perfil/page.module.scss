@@ -12,6 +12,25 @@
   padding: 20px 20px 0;
 }
 
+.logoutBtn {
+  background: transparent;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  color: #888888;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 6px 14px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.15s ease;
+  margin-left: auto;
+
+  &:hover {
+    border-color: #F17878;
+    color: #F17878;
+  }
+}
+
 .backBtn {
   background: transparent;
   border: none;
@@ -22,7 +41,9 @@
   padding: 0;
   transition: color 0.15s ease;
 
-  &:hover { color: #111111; }
+  &:hover {
+    color: #111111;
+  }
 }
 
 .pageTitle {
@@ -75,7 +96,10 @@
 
   &:hover {
     border-color: #111111;
-    .avatarOverlay { opacity: 1; }
+
+    .avatarOverlay {
+      opacity: 1;
+    }
   }
 }
 
@@ -115,7 +139,9 @@
   margin: 0;
 }
 
-.hiddenInput { display: none; }
+.hiddenInput {
+  display: none;
+}
 
 // Info rows
 .infoRow {
@@ -163,8 +189,13 @@
   padding: 6px 0;
   transition: border-color 0.2s ease;
 
-  &::placeholder { color: #bbbbbb; }
-  &:focus { border-bottom-color: #111111; }
+  &::placeholder {
+    color: #bbbbbb;
+  }
+
+  &:focus {
+    border-bottom-color: #111111;
+  }
 }
 
 // Seção de senha
@@ -211,13 +242,24 @@
   width: 100%;
   transition: filter 0.15s ease, transform 0.1s ease;
 
-  &:disabled { opacity: 0.6; cursor: not-allowed; }
-  &:not(:disabled):hover { filter: brightness(1.3); }
-  &:not(:disabled):active { transform: scale(0.98); }
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  &:not(:disabled):hover {
+    filter: brightness(1.3);
+  }
+
+  &:not(:disabled):active {
+    transform: scale(0.98);
+  }
 }
 
 @media (min-width: 768px) {
-  .header { padding: 28px 3rem 0; }
+  .header {
+    padding: 28px 3rem 0;
+  }
 
   .content {
     max-width: 480px;

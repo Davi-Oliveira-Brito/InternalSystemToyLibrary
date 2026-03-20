@@ -25,6 +25,7 @@ interface Analytics {
 export default function AdminAnalises() {
   const router = useRouter();
   const [name, setName] = useState('');
+  const [avatar, setAvatar] = useState('');
   const [selectedSlug, setSelectedSlug] = useState<string>(UNIDADES[0].slug);
   const [data, setData] = useState<Analytics | null>(null);
   const [loading, setLoading] = useState(true);
@@ -34,6 +35,7 @@ export default function AdminAnalises() {
     const role = sessionStorage.getItem('role');
     if (!auth || role !== 'admin') { router.push('/login'); return; }
     setName(sessionStorage.getItem('name') || '');
+    setAvatar(sessionStorage.getItem('avatar_url') || '');
   }, [router]);
 
   useEffect(() => {
@@ -61,6 +63,7 @@ export default function AdminAnalises() {
       <AdminBanner
         backgroundImage="/cards/Analises.png"
         username={name}
+        avatar={avatar}
         title="Resumo da Semana"
         subtitle="Estatísticas por unidade"
       />

@@ -12,6 +12,7 @@ import ConfirmDeleteModal from '@/components/modals/deleteGamemodal/page';
 interface UserData {
   id: string;
   name: string;
+  avatar: string;
   email: string;
   unidade_slug: string;
   avatar_url: string | null;
@@ -20,6 +21,7 @@ interface UserData {
 export default function AdminUsuarios() {
   const router = useRouter();
   const [name, setName] = useState('');
+  const [avatar, setAvatar] = useState('');
   const [users, setUsers] = useState<UserData[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -33,6 +35,7 @@ export default function AdminUsuarios() {
     const role = sessionStorage.getItem('role');
     if (!auth || role !== 'admin') { router.push('/login'); return; }
     setName(sessionStorage.getItem('name') || '');
+    setAvatar(sessionStorage.getItem('avatar_url') || '');
   }, [router]);
 
   const fetchUsers = async () => {
@@ -67,6 +70,7 @@ export default function AdminUsuarios() {
     <main className={styles.page}>
       <AdminBanner
         backgroundImage="/cards/GerenciarJogos.png"
+        avatar={avatar}
         username={name}
         title="Gerenciar Usuários"
         subtitle="Crie, edite e remova estagiários do sistema"

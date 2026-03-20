@@ -1,19 +1,28 @@
 import { NextResponse } from 'next/server'
-import { supabase } from '@/lib/supabase'
+import { supabaseAdmin } from '@/lib/supabase'
+import { signToken } from '@/lib/jwt'
+import bcrypt from 'bcryptjs'
 
 export async function POST(req: Request) {
   const { email, password } = await req.json()
 
-  // login como admin primeiro
-  const { data: admin } = await supabase
+  // Tenta login como admin
+  const { data: admin } = await supabaseAdmin
     .from('admins')
     .select('*')
     .eq('email', email)
-    .eq('password', password)
     .single()
 
-  if (admin) {
-    return NextResponse.json({
+  if (admin && await bcrypt.compare(password, admin.password)) {
+    const token = await signToken({
+      role: 'admin',
+      name: admin.name,
+      email: admin.email,
+      avatar_url: admin.avatar_url ?? null,
+      unidade_slug: null,
+    })
+
+    const res = NextResponse.json({
       ok: true,
       role: 'admin',
       name: admin.name,
@@ -21,18 +30,35 @@ export async function POST(req: Request) {
       avatar_url: admin.avatar_url ?? null,
       unidade_slug: null,
     })
+
+    res.cookies.set('token', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 60 * 60 * 24,
+      path: '/',
+    })
+
+    return res
   }
 
-  // login como usuário (estagiário)
-  const { data: user } = await supabase
+  // Tenta login como usuário
+  const { data: user } = await supabaseAdmin
     .from('users')
     .select('*')
     .eq('email', email)
-    .eq('password', password)
     .single()
 
-  if (user) {
-    return NextResponse.json({
+  if (user && await bcrypt.compare(password, user.password)) {
+    const token = await signToken({
+      role: 'user',
+      name: user.name,
+      email: user.email,
+      avatar_url: user.avatar_url ?? null,
+      unidade_slug: user.unidade_slug,
+    })
+
+    const res = NextResponse.json({
       ok: true,
       role: 'user',
       name: user.name,
@@ -40,6 +66,16 @@ export async function POST(req: Request) {
       avatar_url: user.avatar_url ?? null,
       unidade_slug: user.unidade_slug,
     })
+
+    res.cookies.set('token', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 60 * 60 * 24,
+      path: '/',
+    })
+
+    return res
   }
 
   return NextResponse.json({ ok: false }, { status: 401 })

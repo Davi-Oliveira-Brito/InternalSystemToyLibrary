@@ -8,11 +8,12 @@ import styles from './page.module.scss';
 interface AdminBannerProps {
   backgroundImage: string;
   username: string;
+  avatar: string;
   title: string;
   subtitle: string;
 }
 
-export default function AdminBanner({ backgroundImage, username, title, subtitle }: AdminBannerProps) {
+export default function AdminBanner({ backgroundImage, avatar, title, subtitle, username }: AdminBannerProps) {
   const router = useRouter();
   const initial = username ? username.charAt(0).toUpperCase() : '?';
 
@@ -38,12 +39,22 @@ export default function AdminBanner({ backgroundImage, username, title, subtitle
 
         <div className={styles.adminBadge}>
           <span className={styles.adminLabel}>ADMIN</span>
-          <button
-            className={styles.avatar}
-            onClick={handleAvatarClick}
-            aria-label="Ir para perfil"
-          >
-            {initial}
+          <button className={styles.avatar} onClick={handleAvatarClick} aria-label="Ir para perfil">
+            {avatar ? (
+              <Image
+                src={avatar}
+                alt="Foto"
+                width={44}
+                height={44}
+                className={styles.avatar}
+                unoptimized
+                priority
+              />
+            ) : (
+              <div className={styles.avatarBtn}>
+                {initial}
+              </div>
+            )}
           </button>
         </div>
       </div>

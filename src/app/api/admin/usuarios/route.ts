@@ -1,8 +1,9 @@
 import { NextResponse } from 'next/server'
-import { supabase } from '@/lib/supabase'
+import { supabaseAdmin } from '@/lib/supabase'
+import bcrypt from 'bcryptjs'
 
 export async function GET() {
-  const { data, error } = await supabase
+  const { data, error } = await supabaseAdmin
     .from('users')
     .select('id, name, email, unidade_slug, avatar_url, created_at')
     .order('name')
@@ -14,12 +15,14 @@ export async function GET() {
 export async function POST(req: Request) {
   const body = await req.json()
 
-  const { data, error } = await supabase
+  const hashedPassword = await bcrypt.hash(body.password, 10)
+
+  const { data, error } = await supabaseAdmin
     .from('users')
     .insert({
       name: body.name,
       email: body.email,
-      password: body.password,
+      password: hashedPassword,
       unidade_slug: body.unidade_slug,
     })
     .select()

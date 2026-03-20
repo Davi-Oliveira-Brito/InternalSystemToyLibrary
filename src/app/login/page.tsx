@@ -2,6 +2,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
+import { toast } from 'sonner'
 import styles from './page.module.scss'
 import Input from '@/components/Input/page'
 
@@ -9,12 +10,10 @@ export default function LoginPage() {
   const router = useRouter()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
 
   async function handleLogin() {
     setLoading(true)
-    setError('')
 
     const res = await fetch('/api/auth', {
       method: 'POST',
@@ -38,7 +37,7 @@ export default function LoginPage() {
         router.push('/home')
       }
     } else {
-      setError('Email ou senha incorretos.')
+      toast.error('Email ou senha incorretos.')
     }
 
     setLoading(false)
@@ -47,7 +46,6 @@ export default function LoginPage() {
   return (
     <main className={styles.main}>
       <div className={styles.content}>
-
         <Image
           src="/logo.png"
           alt="Ludoteca"
@@ -72,7 +70,6 @@ export default function LoginPage() {
             value={password}
             onChange={e => setPassword(e.target.value)}
           />
-          {error && <p className={styles.error}>{error}</p>}
         </div>
 
         <button
@@ -82,7 +79,6 @@ export default function LoginPage() {
         >
           {loading ? 'Entrando...' : 'Login'}
         </button>
-
       </div>
     </main>
   )

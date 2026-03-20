@@ -4,6 +4,7 @@ import { useState, useRef } from 'react';
 import Image from 'next/image';
 import { supabase } from '@/lib/supabase';
 import { GAME_CATEGORIES, GameCategory } from '@/types';
+import { compressImage } from '@/lib/imageUtils';
 import styles from './page.module.scss';
 
 interface GameModalProps {
@@ -48,28 +49,6 @@ export default function GameModal({ unidade_slug, onClose, onSuccess }: GameModa
     setImageFile(null);
     setImagePreview(null);
     if (fileInputRef.current) fileInputRef.current.value = '';
-  };
-
-  const compressImage = (file: File): Promise<Blob> => {
-    return new Promise((resolve) => {
-      const img = document.createElement('img');
-      const url = URL.createObjectURL(file);
-      img.onload = () => {
-        const MAX = 1200;
-        let { width, height } = img;
-        if (width > MAX || height > MAX) {
-          if (width > height) { height = Math.round((height * MAX) / width); width = MAX; }
-          else { width = Math.round((width * MAX) / height); height = MAX; }
-        }
-        const canvas = document.createElement('canvas');
-        canvas.width = width;
-        canvas.height = height;
-        canvas.getContext('2d')!.drawImage(img, 0, 0, width, height);
-        URL.revokeObjectURL(url);
-        canvas.toBlob((blob) => resolve(blob!), 'image/jpeg', 0.82);
-      };
-      img.src = url;
-    });
   };
 
   const uploadImage = async (file: File): Promise<string> => {

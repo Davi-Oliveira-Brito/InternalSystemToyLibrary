@@ -24,18 +24,21 @@ const cards = [
 export default function AdminHome() {
   const router = useRouter();
   const [name, setName] = useState('');
+  const [avatar, setAvatar] = useState('');
 
   useEffect(() => {
     const auth = sessionStorage.getItem('auth');
     const role = sessionStorage.getItem('role');
     if (!auth || role !== 'admin') { router.push('/login'); return; }
     setName(sessionStorage.getItem('name') || '');
+    setAvatar(sessionStorage.getItem('avatar_url') || '');
   }, [router]);
 
   return (
     <main className={styles.page}>
       <AdminBanner
         backgroundImage="/cards/GerenciarJogos.png"
+        avatar={avatar}
         username={name}
         title={`Olá, ${name.split(' ')[0]}!`}
         subtitle="Painel Administrativo — Sistema Interno Ludoteca"

@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
+import { compressAvatar } from '@/lib/imageUtils';
 import Image from 'next/image';
 import styles from './page.module.scss';
 
@@ -43,6 +44,12 @@ export default function Perfil() {
 
   const initial = name ? name.charAt(0).toUpperCase() : '?';
 
+  const handleLogout = async () => {
+    await fetch('/api/auth/logout', { method: 'POST' })
+    sessionStorage.clear()
+    router.push('/login')
+  }
+
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -50,30 +57,9 @@ export default function Perfil() {
     setImagePreview(URL.createObjectURL(file));
   };
 
-  const compressImage = (file: File): Promise<Blob> => {
-    return new Promise((resolve) => {
-      const img = document.createElement('img');
-      const url = URL.createObjectURL(file);
-      img.onload = () => {
-        const SIZE = 400;
-        const canvas = document.createElement('canvas');
-        canvas.width = SIZE;
-        canvas.height = SIZE;
-        const ctx = canvas.getContext('2d')!;
-        const min = Math.min(img.width, img.height);
-        const sx = (img.width - min) / 2;
-        const sy = (img.height - min) / 2;
-        ctx.drawImage(img, sx, sy, min, min, 0, 0, SIZE, SIZE);
-        URL.revokeObjectURL(url);
-        canvas.toBlob((blob) => resolve(blob!), 'image/jpeg', 0.85);
-      };
-      img.src = url;
-    });
-  };
-
   const uploadAvatar = async (file: File): Promise<string> => {
     const { supabase } = await import('@/lib/supabase');
-    const compressed = await compressImage(file);
+    const compressed = await compressAvatar(file);
     const path = `${Date.now()}-${Math.random().toString(36).slice(2)}.jpg`;
     const { error } = await supabase.storage.from('avatars').upload(path, compressed, {
       contentType: 'image/jpeg',
@@ -152,6 +138,9 @@ export default function Perfil() {
           ← Voltar
         </button>
         <h1 className={styles.pageTitle}>Meu Perfil</h1>
+        <button className={styles.logoutBtn} onClick={handleLogout}>
+          Sair
+        </button>
       </div>
 
       <div className={styles.content}>
@@ -213,6 +202,8 @@ export default function Perfil() {
         <button className={styles.saveBtn} onClick={handleSave} disabled={loading}>
           {loading ? 'Salvando...' : 'Salvar alterações'}
         </button>
+
+
       </div>
     </main>
   );
