@@ -22,7 +22,6 @@ export default function LoginPage() {
     })
 
     const data = await res.json()
-
     if (data.ok) {
       sessionStorage.setItem('auth', '1')
       sessionStorage.setItem('role', data.role)
@@ -32,8 +31,16 @@ export default function LoginPage() {
       sessionStorage.setItem('unidade_slug', data.unidade_slug ?? '')
 
       if (data.role === 'admin') {
+        toast(`Bem vindo ${sessionStorage.getItem('name')}`, {
+          duration: 3500,
+          className: "toastAdmin"
+        });
         router.push('/admin')
       } else {
+        toast(`Bem vindo ${sessionStorage.getItem('name')}`, {
+          duration: 3500,
+          className:"toast"
+        });
         router.push('/home')
       }
     } else {

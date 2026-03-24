@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { compressAvatar } from '@/lib/imageUtils';
 import Image from 'next/image';
 import styles from './page.module.scss';
+import { toast } from 'sonner';
 
 export default function Perfil() {
   const router = useRouter();
@@ -72,13 +73,13 @@ export default function Perfil() {
 
   const handleSave = async () => {
     if (!newName.trim()) {
-      setError('Nome não pode ficar vazio.');
+      toast('Nome não pode ficar vazio.' , {className: "toast"});
       return;
     }
 
     // Se preencheu nova senha, exige a atual
     if (newPassword.trim() && !currentPassword.trim()) {
-      setError('Informe a senha atual para trocar a senha.');
+      toast('Informe a senha atual para trocar a senha.' , {className: "toast"});
       return;
     }
 
@@ -121,9 +122,9 @@ export default function Perfil() {
       setImagePreview(null);
       setCurrentPassword('');
       setNewPassword('');
-      setSuccess('Perfil atualizado com sucesso!');
+      toast('Perfil atualizado com sucesso!' , {className: "toast"});
     } catch (err: any) {
-      setError(err.message || 'Erro ao salvar. Tente novamente.');
+      toast(err.message || 'Erro ao salvar. Tente novamente.', {className: "toastAdmin"});
     } finally {
       setLoading(false);
     }

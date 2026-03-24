@@ -8,12 +8,14 @@ import MenuCard from '@/components/card/page';
 
 const cards = [
   {
+    id: 1,
     href: '/admin/usuarios',
     image: '/cards/GerenciarJogos.png',
     title: 'Gerenciar Usuários',
     subtitle: 'Crie, edite e remova estagiários do sistema',
   },
   {
+    id: 2,
     href: '/admin/analises',
     image: '/cards/Analises.png',
     title: 'Resumo da Semana',
@@ -47,6 +49,7 @@ export default function AdminHome() {
       <section className={styles.content}>
         {cards.map((card) => (
           <MenuCard
+            key={card.id}
             variant="light"
             title={card.title}
             subtitle={card.subtitle}

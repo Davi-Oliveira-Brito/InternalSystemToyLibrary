@@ -3,6 +3,7 @@
 import { useEffect, useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { compressAvatar } from '@/lib/imageUtils';
+import { toast } from 'sonner';
 import Image from 'next/image';
 import styles from './page.module.scss';
 
@@ -70,12 +71,12 @@ export default function AdminPerfil() {
 
   const handleSave = async () => {
     if (!newName.trim()) {
-      setError('Nome não pode ficar vazio.');
+      toast('Nome não pode ficar vazio.' , {className: "toastAdmin"});
       return;
     }
 
     if (newPassword.trim() && !currentPassword.trim()) {
-      setError('Informe a senha atual para trocar a senha.');
+      toast('Informe a senha atual para trocar a senha.' , {className: "toastAdmin"});
       return;
     }
 
@@ -118,9 +119,9 @@ export default function AdminPerfil() {
       setImagePreview(null);
       setCurrentPassword('');
       setNewPassword('');
-      setSuccess('Perfil atualizado com sucesso!');
+      toast('Perfil atualizado com sucesso!' , {className: "toastAdmin"});
     } catch (err: any) {
-      setError(err.message || 'Erro ao salvar. Tente novamente.');
+      toast(err.message || 'Erro ao salvar. Tente novamente.', {className: "toastAdmin"});
     } finally {
       setLoading(false);
     }

@@ -12,6 +12,17 @@
   --danger: #dc2626;
   --success: #16a34a;
 }
+
+.toastAdmin{
+  background: #F2F2F2 !important;
+  color: #000000 !important;
+}
+
+.toast{
+  background-color: #1A1A1A !important;
+  color: #FFFFFF !important;
+}
+
 * {
   margin: 0;
   padding: 0;
