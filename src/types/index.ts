@@ -52,6 +52,7 @@ export interface Game {
   unidade_slug: string
   created_at: string
   available_copies: number
+  observacao: string | null
 }
 
 export interface Loan {

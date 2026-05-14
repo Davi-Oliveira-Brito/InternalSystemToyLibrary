@@ -1,7 +1,7 @@
 .main {
   min-height: 100vh;
   min-height: 100dvh;
-  background: var(--bg-dark);
+  background: #022E63;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -11,18 +11,10 @@
 
 .content {
   display: flex;
-  justify-content: space-around;
   flex-direction: column;
-  height: 80dvh;
+  gap: 2.5rem;
   width: 100%;
-  max-width: 400px;
-
-  @media (min-width: 768px) {
-    height: auto;
-    gap: 3rem;
-    padding: 3rem;
-    border-radius: 24px;
-  }
+  max-width: 360px;
 }
 
 .logo {
@@ -33,25 +25,84 @@
 .forms {
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: 1.75rem;
 }
 
-.error {
-  font-size: 0.8rem;
-  color: #B8121C;
-  margin-top: 0.5rem;
+.field {
+  position: relative;
+  padding-top: 20px;
+}
+
+.input {
+  width: 100%;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+  outline: none;
+  font-size: 16px;
+  color: #ffffff;
+  padding: 7px 36px 7px 0;
+  font-family: inherit;
+  transition: border-color 0.2s;
+
+  &::placeholder { color: transparent; }
+
+  &:placeholder-shown ~ .label {
+    font-size: 16px;
+    cursor: text;
+    top: 20px;
+  }
+
+  &:focus {
+    padding-bottom: 6px;
+    border-bottom-color: #ffffff;
+  }
+
+  &:focus ~ .label {
+    top: 0;
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.6);
+    font-weight: 600;
+  }
+}
+
+.label {
+  position: absolute;
+  top: 0;
+  display: block;
+  transition: 0.2s;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.45);
+  pointer-events: none;
+}
+
+.toggle {
+  position: absolute;
+  right: 0;
+  bottom: 8px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  opacity: 0.55;
+  transition: opacity 0.15s;
+
+  &:hover { opacity: 1; }
 }
 
 .button {
   width: 100%;
-  background: #B8121C;
-  color: #FFFFFF;
+  background: #E40316;
+  color: #ffffff;
   border: none;
   border-radius: 12px;
   padding: 1rem;
   font-size: 1rem;
   font-weight: 700;
   cursor: pointer;
+  font-family: inherit;
   transition: opacity 0.2s, transform 0.1s;
 
   &:hover { opacity: 0.9; }

@@ -116,6 +116,7 @@ export default function GerenciarJogos() {
               category={game.category}
               totalCopies={game.total_copies}
               availableCopies={game.available_copies}
+              observacao={game.observacao}
               mode="manage"
               onEdit={() => setEditingGame(game)}
               onDelete={() => setDeletingGame(game)}

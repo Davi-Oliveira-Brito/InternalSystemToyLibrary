@@ -78,14 +78,14 @@
   width: 100%;
 
   &::placeholder { color: #bbbbbb; }
-  &:focus { border-bottom-color: #111111; }
+  &:focus { border-bottom-color: #022E63; }
 
   option { background: #ffffff; color: #111111; }
 }
 
 .error {
   font-size: 13px;
-  color: #F17878;
+  color: #E40316;
   margin: 0;
 }
 
@@ -112,13 +112,13 @@
 
 .btnCancel {
   @extend %btn;
-  background-color: #F17878;
-  color: #ffffff;
+  background-color: #F0F4F8;
+  color: #6b7280;
 }
 
 .btnSave {
   @extend %btn;
-  background-color: #111111;
+  background-color: #022E63;
   color: #ffffff;
 }
 

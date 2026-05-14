@@ -1,15 +1,18 @@
 
 
 :root {
-  --bg-dark: #0C0F18;
-  --bg: #0C0F18;
+  --bg-dark: #F0F4F8;
+  --bg: #F0F4F8;
   --card: #ffffff;
-  --accent: #003B7A;
-  --accent-hover: #002d5e;
-  --text: #AAAAAA;
+  --primary: #022E63;
+  --primary-hover: #01244f;
+  --accent: #022E63;
+  --accent-hover: #01244f;
+  --text: #1A1A1A;
   --text-muted: #6b7280;
-  --border: #e0e0e0;
-  --danger: #dc2626;
+  --border: #E5E7EB;
+  --danger: #E40316;
+  --danger-hover: #c4020f;
   --success: #16a34a;
 }
 
@@ -19,7 +22,7 @@
 }
 
 .toast{
-  background-color: #1A1A1A !important;
+  background-color: #022E63 !important;
   color: #FFFFFF !important;
 }
 

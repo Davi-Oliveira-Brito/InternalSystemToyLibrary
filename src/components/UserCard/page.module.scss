@@ -14,7 +14,7 @@
   height: 48px;
   min-width: 48px;
   border-radius: 50%;
-  background-color: #111111;
+  background-color: #022E63;
   color: #ffffff;
   font-size: 20px;
   font-weight: 800;
@@ -51,9 +51,9 @@
 
 .unidade {
   font-size: 12px;
-  color: #111111;
-  background: rgba(0, 0, 0, 0.07);
-  border: 1px solid rgba(0, 0, 0, 0.12);
+  color: #022E63;
+  background: rgba(2, 46, 99, 0.08);
+  border: 1px solid rgba(2, 46, 99, 0.15);
   padding: 2px 8px;
   border-radius: 20px;
   width: fit-content;
@@ -83,13 +83,13 @@
 
 .btnEdit {
   @extend %btn;
-  background-color: rgba(0, 0, 0, 0.08);
-  color: #111111;
+  background-color: #F0F4F8;
+  color: #022E63;
 }
 
 .btnDelete {
   @extend %btn;
-  background-color: #B8121C;
+  background-color: #E40316;
   color: #ffffff;
 }
 

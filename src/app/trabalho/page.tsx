@@ -123,6 +123,7 @@ export default function ModoTrabalho() {
                 category={game.category}
                 totalCopies={game.total_copies}
                 availableCopies={game.available_copies}
+                observacao={game.observacao}
                 mode="loan"
                 onLoan={() => setLoaningGame(game)}
                 onReturn={() => setReturningGame(game)}

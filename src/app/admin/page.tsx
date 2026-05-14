@@ -50,7 +50,6 @@ export default function AdminHome() {
         {cards.map((card) => (
           <MenuCard
             key={card.id}
-            variant="light"
             title={card.title}
             subtitle={card.subtitle}
             image={card.image}

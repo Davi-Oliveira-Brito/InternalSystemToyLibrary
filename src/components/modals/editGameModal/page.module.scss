@@ -1,7 +1,7 @@
 .overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.65);
+  background: rgba(2, 46, 99, 0.35);
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
   z-index: 100;
@@ -13,7 +13,7 @@
 }
 
 .modal {
-  background: #303440;
+  background: #ffffff;
   border-radius: 20px;
   width: 100%;
   max-width: 420px;
@@ -23,6 +23,7 @@
   display: flex;
   flex-direction: column;
   gap: 24px;
+  box-shadow: 0 8px 40px rgba(2, 46, 99, 0.15);
   animation: slideUp 0.2s ease;
 }
 
@@ -35,7 +36,7 @@
 .title {
   font-size: 22px;
   font-weight: 700;
-  color: #84D574;
+  color: #022E63;
   margin: 0;
 }
 
@@ -46,10 +47,11 @@
   padding: 4px;
   display: flex;
   align-items: center;
-  opacity: 0.7;
+  opacity: 0.4;
+  color: #1A1A1A;
   transition: opacity 0.15s ease;
 
-  &:hover { opacity: 1; }
+  &:hover { opacity: 0.8; }
 }
 
 .fields {
@@ -72,36 +74,34 @@
 
 .label {
   font-size: 13px;
-  color: #AAAAAA;
+  color: #6b7280;
   font-weight: 500;
 }
 
 .input {
   background: transparent;
   border: none;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  border-bottom: 1px solid #E5E7EB;
   outline: none;
-  color: #ffffff;
+  color: #1A1A1A;
   font-size: 15px;
   font-family: inherit;
   padding: 6px 0;
   transition: border-color 0.2s ease;
   width: 100%;
 
-  &::placeholder { color: #555; }
-  &:focus { border-bottom-color: #84D574; }
+  &::placeholder { color: #d1d5db; }
+  &:focus { border-bottom-color: #022E63; }
 
   &[type='number']::-webkit-inner-spin-button,
   &[type='number']::-webkit-outer-spin-button { -webkit-appearance: none; }
 
-  // Select styling
   option {
-    background: #303440;
-    color: #ffffff;
+    background: #ffffff;
+    color: #1A1A1A;
   }
 }
 
-// Upload
 .uploadWrapper {
   display: flex;
   align-items: center;
@@ -111,27 +111,23 @@
 .uploadBtn {
   padding: 7px 16px;
   border-radius: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid #E5E7EB;
   background: transparent;
-  color: #D9D9D9;
+  color: #6b7280;
   font-size: 13px;
   font-family: inherit;
   cursor: pointer;
   transition: border-color 0.15s ease, color 0.15s ease;
 
   &:hover:not(:disabled) {
-    border-color: #84D574;
-    color: #84D574;
+    border-color: #022E63;
+    color: #022E63;
   }
 
-  &:disabled {
-    cursor: not-allowed;
-  }
+  &:disabled { cursor: not-allowed; }
 }
 
-.hiddenInput {
-  display: none;
-}
+.hiddenInput { display: none; }
 
 .previewWrapper {
   display: flex;
@@ -149,18 +145,42 @@
 .clearBtn {
   background: transparent;
   border: none;
-  color: #F17878;
+  color: #E40316;
   font-size: 14px;
   cursor: pointer;
   padding: 2px 4px;
   line-height: 1;
 
-  &:hover { color: #ff5555; }
+  &:hover { opacity: 0.8; }
+}
+
+.optional {
+  font-size: 11px;
+  color: #9ca3af;
+  font-weight: 400;
+}
+
+.textarea {
+  background: transparent;
+  border: 1px solid #E5E7EB;
+  border-radius: 8px;
+  outline: none;
+  color: #1A1A1A;
+  font-size: 14px;
+  font-family: inherit;
+  padding: 8px 10px;
+  transition: border-color 0.2s ease;
+  resize: none;
+  width: 100%;
+  line-height: 1.5;
+
+  &::placeholder { color: #d1d5db; }
+  &:focus { border-color: #022E63; }
 }
 
 .error {
   font-size: 13px;
-  color: #F17878;
+  color: #E40316;
   margin: 0;
 }
 
@@ -180,21 +200,21 @@
   font-family: inherit;
   transition: filter 0.15s ease, transform 0.1s ease;
 
-  &:disabled { opacity: 0.6; cursor: not-allowed; }
+  &:disabled { opacity: 0.55; cursor: not-allowed; }
   &:not(:disabled):hover { filter: brightness(1.1); }
   &:not(:disabled):active { transform: scale(0.97); }
 }
 
 .btnCancel {
   @extend %btn-base;
-  background-color: #F17878;
-  color: #ffffff;
+  background-color: #F0F4F8;
+  color: #6b7280;
 }
 
 .btnSave {
   @extend %btn-base;
-  background-color: #84D574;
-  color: #F2F2F2;
+  background-color: #022E63;
+  color: #ffffff;
 }
 
 @keyframes fadeIn {

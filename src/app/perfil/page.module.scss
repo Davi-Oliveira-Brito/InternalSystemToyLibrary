@@ -1,6 +1,6 @@
 .page {
   min-height: 100vh;
-  background-color: #0C0F18;
+  background-color: var(--bg);
   display: flex;
   flex-direction: column;
 }
@@ -11,10 +11,11 @@
   gap: 16px;
   padding: 20px 20px 0;
 }
+
 .logoutBtn {
   background: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  color: #AAAAAA;
+  border: 1px solid #E5E7EB;
+  color: #6b7280;
   font-size: 13px;
   font-weight: 600;
   padding: 6px 14px;
@@ -25,28 +26,28 @@
   margin-left: auto;
 
   &:hover {
-    border-color: #F17878;
-    color: #F17878;
+    border-color: #E40316;
+    color: #E40316;
   }
 }
 
 .backBtn {
   background: transparent;
   border: none;
-  color: #AAAAAA;
+  color: #6b7280;
   font-size: 14px;
   cursor: pointer;
   font-family: inherit;
   padding: 0;
   transition: color 0.15s ease;
 
-  &:hover { color: #ffffff; }
+  &:hover { color: #022E63; }
 }
 
 .pageTitle {
   font-size: 20px;
   font-weight: 700;
-  color: #ffffff;
+  color: #022E63;
   margin: 0;
 }
 
@@ -70,8 +71,8 @@
   width: 100px;
   height: 100px;
   border-radius: 50%;
-  background-color: #303440;
-  border: 3px solid rgba(255, 255, 255, 0.1);
+  background-color: #022E63;
+  border: 3px solid rgba(2, 46, 99, 0.15);
   cursor: pointer;
   overflow: hidden;
   display: flex;
@@ -80,7 +81,7 @@
   transition: border-color 0.2s ease;
 
   &:hover {
-    border-color: #B8121C;
+    border-color: #E40316;
 
     .avatarOverlay { opacity: 1; }
   }
@@ -100,7 +101,7 @@
 .avatarOverlay {
   position: absolute;
   inset: 0;
-  background: rgba(0, 0, 0, 0.55);
+  background: rgba(0, 0, 0, 0.5);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -118,24 +119,24 @@
 
 .avatarHint {
   font-size: 12px;
-  color: #666;
+  color: #9ca3af;
   margin: 0;
 }
 
 .hiddenInput { display: none; }
 
-// Info rows (campos fixos)
+// Info rows
 .infoRow {
   display: flex;
   flex-direction: column;
   gap: 4px;
   padding-bottom: 12px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+  border-bottom: 1px solid #E5E7EB;
 }
 
 .infoLabel {
   font-size: 12px;
-  color: #666;
+  color: #9ca3af;
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -143,7 +144,7 @@
 
 .infoValue {
   font-size: 15px;
-  color: #AAAAAA;
+  color: #1A1A1A;
 }
 
 // Campos editáveis
@@ -155,34 +156,34 @@
 
 .label {
   font-size: 13px;
-  color: #AAAAAA;
+  color: #6b7280;
   font-weight: 500;
 }
 
 .input {
   background: transparent;
   border: none;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  border-bottom: 1px solid #E5E7EB;
   outline: none;
-  color: #ffffff;
+  color: #1A1A1A;
   font-size: 15px;
   font-family: inherit;
   padding: 6px 0;
   transition: border-color 0.2s ease;
 
-  &::placeholder { color: #444; }
-  &:focus { border-bottom-color: #B8121C; }
+  &::placeholder { color: #d1d5db; }
+  &:focus { border-bottom-color: #022E63; }
 }
 
 .error {
   font-size: 13px;
-  color: #F17878;
+  color: #E40316;
   margin: 0;
 }
 
 .successMsg {
   font-size: 13px;
-  color: #84D574;
+  color: #16a34a;
   margin: 0;
 }
 
@@ -190,7 +191,7 @@
   margin-top: 8px;
   padding: 14px;
   border-radius: 12px;
-  background-color: #B8121C;
+  background-color: #022E63;
   color: #ffffff;
   font-size: 15px;
   font-weight: 700;
@@ -200,8 +201,8 @@
   width: 100%;
   transition: filter 0.15s ease, transform 0.1s ease;
 
-  &:disabled { opacity: 0.6; cursor: not-allowed; }
-  &:not(:disabled):hover { filter: brightness(1.15); }
+  &:disabled { opacity: 0.55; cursor: not-allowed; }
+  &:not(:disabled):hover { filter: brightness(1.1); }
   &:not(:disabled):active { transform: scale(0.98); }
 }
 
@@ -222,13 +223,13 @@
   flex-direction: column;
   gap: 16px;
   padding-top: 8px;
-  border-top: 1px solid rgba(255, 255, 255, 0.07);
+  border-top: 1px solid #E5E7EB;
 }
 
 .passwordTitle {
   font-size: 13px;
   font-weight: 600;
-  color: #AAAAAA;
+  color: #6b7280;
   margin: 0;
   text-transform: uppercase;
   letter-spacing: 0.05em;

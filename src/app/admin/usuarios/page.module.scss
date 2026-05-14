@@ -1,6 +1,6 @@
 .page {
   min-height: 100vh;
-  background-color: #F2F2F2;
+  background-color: var(--bg);
   display: flex;
   flex-direction: column;
 }
@@ -20,7 +20,7 @@
 
 .count {
   font-size: 13px;
-  color: #999999;
+  color: #9ca3af;
   margin: 0;
 }
 
@@ -30,7 +30,7 @@
   gap: 6px;
   padding: 9px 18px;
   border-radius: 20px;
-  background-color: #111111;
+  background-color: #022E63;
   color: #ffffff;
   font-size: 13px;
   font-weight: 700;
@@ -39,7 +39,7 @@
   font-family: inherit;
   transition: filter 0.15s ease, transform 0.1s ease;
 
-  &:hover { filter: brightness(1.3); }
+  &:hover { filter: brightness(1.1); }
   &:active { transform: scale(0.97); }
 }
 
@@ -51,7 +51,7 @@
 
 .empty {
   text-align: center;
-  color: #AAAAAA;
+  color: #9ca3af;
   font-size: 14px;
   margin-top: 40px;
 }
@@ -66,7 +66,5 @@
 }
 
 @media (min-width: 1024px) {
-  .content {
-    max-width: 860px;
-  }
+  .content { max-width: 860px; }
 }

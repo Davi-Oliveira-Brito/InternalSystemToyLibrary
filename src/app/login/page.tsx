@@ -4,12 +4,12 @@ import { useRouter } from 'next/navigation'
 import Image from 'next/image'
 import { toast } from 'sonner'
 import styles from './page.module.scss'
-import Input from '@/components/Input/page'
 
 export default function LoginPage() {
   const router = useRouter()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [showPassword, setShowPassword] = useState(false)
   const [loading, setLoading] = useState(false)
 
   async function handleLogin() {
@@ -31,16 +31,10 @@ export default function LoginPage() {
       sessionStorage.setItem('unidade_slug', data.unidade_slug ?? '')
 
       if (data.role === 'admin') {
-        toast(`Bem vindo ${sessionStorage.getItem('name')}`, {
-          duration: 3500,
-          className: "toastAdmin"
-        });
+        toast(`Bem vindo ${data.name}`, { duration: 3500, className: 'toastAdmin' })
         router.push('/admin')
       } else {
-        toast(`Bem vindo ${sessionStorage.getItem('name')}`, {
-          duration: 3500,
-          className:"toast"
-        });
+        toast(`Bem vindo ${data.name}`, { duration: 3500, className: 'toast' })
         router.push('/home')
       }
     } else {
@@ -54,7 +48,7 @@ export default function LoginPage() {
     <main className={styles.main}>
       <div className={styles.content}>
         <Image
-          src="/logo.png"
+          src="/logo clara.png"
           alt="Ludoteca"
           width={220}
           height={80}
@@ -63,20 +57,43 @@ export default function LoginPage() {
         />
 
         <div className={styles.forms}>
-          <Input
-            type="text"
-            label="Email"
-            placeholder=" "
-            value={email}
-            onChange={e => setEmail(e.target.value)}
-          />
-          <Input
-            type="password"
-            label="Senha"
-            placeholder=" "
-            value={password}
-            onChange={e => setPassword(e.target.value)}
-          />
+          <div className={styles.field}>
+            <input
+              type="text"
+              className={styles.input}
+              placeholder=" "
+              value={email}
+              onChange={e => setEmail(e.target.value)}
+              autoComplete="email"
+            />
+            <label className={styles.label}>Email</label>
+          </div>
+
+          <div className={styles.field}>
+            <input
+              type={showPassword ? 'text' : 'password'}
+              className={styles.input}
+              placeholder=" "
+              value={password}
+              onChange={e => setPassword(e.target.value)}
+              autoComplete="current-password"
+              onKeyDown={e => e.key === 'Enter' && handleLogin()}
+            />
+            <label className={styles.label}>Senha</label>
+            <button
+              type="button"
+              className={styles.toggle}
+              onClick={() => setShowPassword(p => !p)}
+              aria-label="Mostrar senha"
+            >
+              <Image
+                src={showPassword ? '/openedEyes.svg' : '/closedEyes.svg'}
+                alt="toggle senha"
+                width={20}
+                height={20}
+              />
+            </button>
+          </div>
         </div>
 
         <button
@@ -84,7 +101,7 @@ export default function LoginPage() {
           onClick={handleLogin}
           disabled={loading}
         >
-          {loading ? 'Entrando...' : 'Login'}
+          {loading ? 'Entrando...' : 'Entrar'}
         </button>
       </div>
     </main>

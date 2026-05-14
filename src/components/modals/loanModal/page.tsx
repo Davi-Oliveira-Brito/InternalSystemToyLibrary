@@ -21,7 +21,7 @@ export default function LoanModal({ gameId, gameName, unidade_slug, onClose, onS
 
   const handleSave = async () => {
     if (!studentName.trim() || !studentRa.trim() || !studentClass.trim()) {
-      setError('Todos os campos são obrigatórios.');
+      setError('Nome, RA e Turma são obrigatórios.');
       return;
     }
 
@@ -42,11 +42,16 @@ export default function LoanModal({ gameId, gameName, unidade_slug, onClose, onS
         }),
       });
 
-      if (!res.ok) throw new Error('Erro ao registrar empréstimo.');
+      const data = await res.json();
+      if (!res.ok) {
+        setError(data.error || 'Erro ao registrar empréstimo.');
+        return;
+      }
+
       onSuccess();
       onClose();
-    } catch (err: any) {
-      setError(err.message || 'Erro ao salvar. Tente novamente.');
+    } catch {
+      setError('Erro ao salvar. Tente novamente.');
     } finally {
       setLoading(false);
     }

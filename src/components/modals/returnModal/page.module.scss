@@ -1,7 +1,7 @@
 .overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.65);
+  background: rgba(2, 46, 99, 0.35);
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
   z-index: 100;
@@ -13,7 +13,7 @@
 }
 
 .modal {
-  background: #303440;
+  background: #ffffff;
   border-radius: 20px;
   width: 100%;
   max-width: 420px;
@@ -21,6 +21,7 @@
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  box-shadow: 0 8px 40px rgba(2, 46, 99, 0.15);
   animation: slideUp 0.2s ease;
 }
 
@@ -30,19 +31,19 @@
   justify-content: space-between;
   gap: 12px;
   padding: 28px 24px 20px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid #E5E7EB;
 }
 
 .title {
   font-size: 22px;
   font-weight: 700;
-  color: #F17878;
+  color: #E40316;
   margin: 0 0 4px;
 }
 
 .gameName {
   font-size: 14px;
-  color: #AAAAAA;
+  color: #6b7280;
   margin: 0;
 }
 
@@ -53,12 +54,13 @@
   padding: 4px;
   display: flex;
   align-items: center;
-  opacity: 0.7;
+  opacity: 0.4;
+  color: #1A1A1A;
   flex-shrink: 0;
   transition: opacity 0.15s ease;
   margin-top: 2px;
 
-  &:hover { opacity: 1; }
+  &:hover { opacity: 0.8; }
 }
 
 .list {
@@ -71,7 +73,7 @@
 
 .empty {
   font-size: 14px;
-  color: #AAAAAA;
+  color: #9ca3af;
   text-align: center;
   padding: 20px 0;
   margin: 0;
@@ -82,9 +84,16 @@
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  background: rgba(255, 255, 255, 0.05);
+  background: #F0F4F8;
   border-radius: 12px;
   padding: 14px 16px;
+  border: 1.5px solid transparent;
+  transition: border-color 0.2s;
+}
+
+.overdueItem {
+  background: #fff5f5;
+  border-color: #E40316;
 }
 
 .loanInfo {
@@ -92,32 +101,59 @@
   flex-direction: column;
   gap: 3px;
   min-width: 0;
+  flex: 1;
+}
+
+.loanTop {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
 }
 
 .studentName {
   font-size: 15px;
   font-weight: 600;
+  color: #022E63;
+}
+
+.overdueTag {
+  font-size: 11px;
+  font-weight: 700;
   color: #ffffff;
+  background: #E40316;
+  border-radius: 20px;
+  padding: 2px 8px;
   white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 
 .studentDetails {
   font-size: 13px;
-  color: #AAAAAA;
+  color: #6b7280;
 }
 
 .loanedAt {
   font-size: 12px;
-  color: #666;
+  color: #9ca3af;
+
+  strong { color: #4b5563; }
+}
+
+.observacao {
+  font-size: 12px;
+  color: #6b7280;
+  background: #f9fafb;
+  border-left: 3px solid #d97706;
+  padding: 4px 8px;
+  border-radius: 0 6px 6px 0;
+  margin-top: 4px;
 }
 
 .btnReturn {
   flex-shrink: 0;
   padding: 8px 16px;
   border-radius: 20px;
-  background-color: #F17878;
+  background-color: #E40316;
   color: #ffffff;
   font-size: 13px;
   font-weight: 600;
@@ -128,7 +164,7 @@
   min-width: 80px;
   text-align: center;
 
-  &:disabled { opacity: 0.6; cursor: not-allowed; }
+  &:disabled { opacity: 0.55; cursor: not-allowed; }
   &:not(:disabled):hover { filter: brightness(1.1); }
   &:not(:disabled):active { transform: scale(0.97); }
 }

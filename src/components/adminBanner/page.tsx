@@ -22,13 +22,11 @@ export default function AdminBanner({ backgroundImage, avatar, title, subtitle, 
   };
 
   return (
-    <div className={styles.banner} style={{ backgroundImage: `url(${backgroundImage})` }}>
-      <div className={styles.overlay} />
-
+    <div className={styles.banner}>
       <div className={styles.topBar}>
         <Link href="/admin" className={styles.logoLink}>
           <Image
-            src="/logo.png"
+            src="/logo clara.png"
             alt="Sistema Interno Ludoteca"
             width={160}
             height={40}

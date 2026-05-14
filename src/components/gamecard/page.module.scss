@@ -1,12 +1,14 @@
 .card {
   display: flex;
   flex-direction: row;
-  background-color: #303440;
+  background-color: #ffffff;
   border-radius: 16px;
   overflow: hidden;
   width: 100%;
   height: 200px;
-  transition: opacity 0.2s ease;
+  border: 1px solid #E5E7EB;
+  box-shadow: 0 2px 8px rgba(2, 46, 99, 0.06);
+  transition: box-shadow 0.2s ease;
 }
 
 .unavailable {
@@ -14,7 +16,7 @@
 }
 
 .allLoaned {
-  opacity: 0.75;
+  opacity: 0.8;
 }
 
 // Image
@@ -41,10 +43,10 @@
 }
 
 .name {
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 700;
-  color: #ffffff;
-  margin: 0 0 10px;
+  color: #022E63;
+  margin: 0 0 8px;
   line-height: 1.2;
   white-space: nowrap;
   overflow: hidden;
@@ -60,16 +62,26 @@
 
 .infoRow {
   font-size: 13px;
-  color: #D9D9D9;
+  color: #6b7280;
 
   strong {
-    color: #ffffff;
+    color: #1A1A1A;
     font-weight: 600;
   }
 }
 
 .zero {
-  color: #B8121C !important;
+  color: #E40316 !important;
+  font-weight: 700;
+}
+
+.observacaoRow {
+  font-size: 12px;
+  color: #d97706;
+  margin-top: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 // Actions
@@ -79,7 +91,6 @@
   margin-top: 10px;
 }
 
-// Base compartilhada
 %btn-base {
   flex: 1;
   display: inline-flex;
@@ -98,10 +109,10 @@
   font-family: inherit;
   transition: filter 0.15s ease, transform 0.1s ease;
 
-  &:hover { filter: brightness(1.15); }
+  &:hover { filter: brightness(1.1); }
   &:active { transform: scale(0.97); }
   &:disabled {
-    opacity: 0.5;
+    opacity: 0.45;
     cursor: not-allowed;
     filter: none;
     transform: none;
@@ -111,28 +122,31 @@
 // Manage mode
 .btnEdit {
   @extend %btn-base;
-  background-color: #2E7D32;
+  background-color: #022E63;
   color: #ffffff;
 }
 
 .btnDelete {
   @extend %btn-base;
-  background-color: #B8121C;
+  background-color: #E40316;
   color: #ffffff;
 }
 
 // Loan mode
 .btnLoan {
   @extend %btn-base;
-  background-color: #84D574;
-  color: #FFFFFF;
+  background-color: #022E63;
+  color: #ffffff;
 }
 
 .btnReturn {
   @extend %btn-base;
-  background-color: #F17878;
+  background-color: #E40316;
   color: #ffffff;
 }
+
+.btnHalf { flex: 1; }
+.btnFull { flex: 2; }
 
 // Skeleton
 .skeleton {
@@ -143,7 +157,7 @@
   width: 40%;
   min-width: 40%;
   height: 100%;
-  background: linear-gradient(90deg, #3a3d4a 25%, #44475a 50%, #3a3d4a 75%);
+  background: linear-gradient(90deg, #e8ecf0 25%, #f0f4f8 50%, #e8ecf0 75%);
   background-size: 200% 100%;
   animation: shimmer 1.4s infinite;
 }
@@ -160,7 +174,7 @@
 .skeletonLine {
   height: 12px;
   border-radius: 6px;
-  background: linear-gradient(90deg, #3a3d4a 25%, #44475a 50%, #3a3d4a 75%);
+  background: linear-gradient(90deg, #e8ecf0 25%, #f0f4f8 50%, #e8ecf0 75%);
   background-size: 200% 100%;
   animation: shimmer 1.4s infinite;
 }
@@ -169,7 +183,7 @@
   height: 32px;
   border-radius: 8px;
   width: 80%;
-  background: linear-gradient(90deg, #3a3d4a 25%, #44475a 50%, #3a3d4a 75%);
+  background: linear-gradient(90deg, #e8ecf0 25%, #f0f4f8 50%, #e8ecf0 75%);
   background-size: 200% 100%;
   animation: shimmer 1.4s infinite;
 }
@@ -181,6 +195,6 @@
 
 @media (min-width: 1024px) {
   .card { height: 180px; }
-  .name { font-size: 20px; }
-  .infoRow { font-size: 14px; }
+  .name { font-size: 18px; }
+  .infoRow { font-size: 13px; }
 }

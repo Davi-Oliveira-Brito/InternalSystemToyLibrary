@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { supabase } from '@/lib/supabase'
+import { supabaseAdmin as supabase } from '@/lib/supabaseAdmin'
 
 function extractStoragePath(url: string): { bucket: string; path: string } | null {
   try {
@@ -42,6 +42,7 @@ export async function PUT(
       image_url: body.image_url || null,
       category: body.category || null,
       total_copies: body.total_copies,
+      observacao: body.observacao ?? null,
     })
     .eq('id', id)
     .select()
@@ -64,6 +65,20 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   const { id } = await params
+
+  // Bloqueia se houver empréstimos em aberto
+  const { count: openLoans } = await supabase
+    .from('loans')
+    .select('*', { count: 'exact', head: true })
+    .eq('game_id', id)
+    .eq('returned', false)
+
+  if (openLoans && openLoans > 0) {
+    return NextResponse.json(
+      { error: `Este jogo tem ${openLoans} empréstimo(s) em aberto. Registre a devolução antes de excluir.` },
+      { status: 409 }
+    )
+  }
 
   // Busca imagem antes de deletar
   const { data: game } = await supabase

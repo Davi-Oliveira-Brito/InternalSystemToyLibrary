@@ -10,6 +10,7 @@ interface GameCardProps {
   category?: string | null;
   totalCopies: number;
   availableCopies: number;
+  observacao?: string | null;
   mode: 'manage' | 'loan';
   onEdit?: () => void;
   onDelete?: () => void;
@@ -25,6 +26,7 @@ export default function GameCard({
   category,
   totalCopies,
   availableCopies,
+  observacao,
   mode,
   onEdit,
   onDelete,
@@ -81,6 +83,11 @@ export default function GameCard({
               {availableCopies}
             </strong>
           </span>
+          {observacao && (
+            <span className={styles.observacaoRow} title={observacao}>
+              📝 {observacao}
+            </span>
+          )}
         </div>
 
         <div className={styles.actions}>

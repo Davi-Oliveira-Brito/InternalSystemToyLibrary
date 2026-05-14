@@ -21,13 +21,11 @@ export default function Banner({ backgroundImage, username, title, subtitle, ava
   };
 
   return (
-    <div className={styles.banner} style={{ backgroundImage: `url(${backgroundImage})` }}>
-      <div className={styles.overlay} />
-
+    <div className={styles.banner}>
       <div className={styles.topBar}>
         <Link href="/home" className={styles.logoLink}>
           <Image
-            src="/logo.png"
+            src="/logo clara.png"
             alt="Sistema Interno Ludoteca"
             width={160}
             height={40}

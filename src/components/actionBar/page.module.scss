@@ -18,7 +18,7 @@
   height: 40px;
   min-width: 40px;
   border-radius: 50%;
-  background-color: #303440;
+  background-color: #022E63;
   border: none;
   color: #ffffff;
   display: flex;
@@ -28,7 +28,7 @@
   flex-shrink: 0;
   transition: background-color 0.15s ease, transform 0.1s ease;
 
-  &:hover { background-color: #3d4150; }
+  &:hover { background-color: #01244f; }
   &:active { transform: scale(0.95); }
 }
 
@@ -38,12 +38,18 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  background-color: #303440;
+  background-color: #ffffff;
+  border: 1px solid #E5E7EB;
   border-radius: 20px;
   padding: 0 14px;
   height: 40px;
-  color: #AAAAAA;
+  color: #6b7280;
   overflow: hidden;
+  transition: border-color 0.15s ease;
+
+  &:focus-within {
+    border-color: #022E63;
+  }
 }
 
 .searchIcon { flex-shrink: 0; }
@@ -55,10 +61,10 @@
   border: none;
   outline: none;
   font-size: 14px;
-  color: #ffffff;
+  color: #1A1A1A;
   font-family: inherit;
 
-  &::placeholder { color: #AAAAAA; }
+  &::placeholder { color: #9ca3af; }
 }
 
 // Filtro
@@ -73,7 +79,7 @@
   gap: 4px;
   background: transparent;
   border: none;
-  color: #D9D9D9;
+  color: #6b7280;
   font-size: 13px;
   font-weight: 500;
   cursor: pointer;
@@ -82,13 +88,14 @@
   font-family: inherit;
   transition: color 0.15s ease;
 
-  &:hover { color: #ffffff; }
+  &:hover { color: #022E63; }
 }
 
 .filterActive {
-  color: #84D574;
+  color: #022E63;
+  font-weight: 600;
 
-  &:hover { color: #84D574; }
+  &:hover { color: #022E63; }
 }
 
 .filterLabel { display: none; }
@@ -106,12 +113,13 @@
   position: absolute;
   top: calc(100% + 8px);
   right: 0;
-  background: #303440;
+  background: #ffffff;
+  border: 1px solid #E5E7EB;
   border-radius: 12px;
   padding: 6px;
-  min-width: 140px;
+  min-width: 150px;
   z-index: 50;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 8px 24px rgba(2, 46, 99, 0.12);
   animation: fadeIn 0.15s ease;
 }
 
@@ -121,7 +129,7 @@
   text-align: left;
   background: transparent;
   border: none;
-  color: #D9D9D9;
+  color: #4b5563;
   font-size: 14px;
   font-family: inherit;
   padding: 9px 12px;
@@ -130,14 +138,15 @@
   transition: background-color 0.1s ease, color 0.1s ease;
 
   &:hover {
-    background-color: rgba(255, 255, 255, 0.07);
-    color: #ffffff;
+    background-color: #F0F4F8;
+    color: #022E63;
   }
 }
 
 .dropdownItemActive {
-  color: #84D574;
+  color: #022E63;
   font-weight: 600;
+  background-color: rgba(2, 46, 99, 0.06);
 }
 
 // Stats
@@ -152,9 +161,9 @@
   strong { font-weight: 700; }
 }
 
-.statWhite { color: #F6FF4A; }
-.statGreen { color: #77FF5C; }
-.statRed   { color: #FF4649; }
+.statWhite { color: #022E63; }
+.statGreen { color: #16a34a; }
+.statRed   { color: #E40316; }
 
 @media (min-width: 400px) {
   .filterLabel { display: inline; }

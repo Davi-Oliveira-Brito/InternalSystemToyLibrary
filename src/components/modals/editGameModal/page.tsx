@@ -24,6 +24,7 @@ export default function EditGameModal({ game, onClose, onSuccess }: EditGameModa
   const [name, setName] = useState(game.name);
   const [category, setCategory] = useState<GameCategory | ''>(game.category || '');
   const [totalCopies, setTotalCopies] = useState(String(game.total_copies));
+  const [observacao, setObservacao] = useState(game.observacao || '');
 
   // Se a imagem atual veio do Storage, não preenche o campo URL
   const initialUrl = game.image_url && !isSupabaseUrl(game.image_url) ? game.image_url : '';
@@ -111,6 +112,7 @@ export default function EditGameModal({ game, onClose, onSuccess }: EditGameModa
           image_url: finalImageUrl,
           category: category || null,
           total_copies: Number(totalCopies),
+          observacao: observacao.trim() || null,
         }),
       });
 
@@ -188,6 +190,20 @@ export default function EditGameModal({ game, onClose, onSuccess }: EditGameModa
             <input className={styles.input} type="text" value={imageUrl}
               onChange={handleUrlChange} placeholder="https://..."
               disabled={hasFile || isExistingStorageImage} />
+          </div>
+
+          {/* Anotação */}
+          <div className={styles.field}>
+            <label className={styles.label}>
+              Anotação <span className={styles.optional}>(estado do jogo, peças faltando, etc.)</span>
+            </label>
+            <textarea
+              className={styles.textarea}
+              value={observacao}
+              onChange={(e) => setObservacao(e.target.value)}
+              placeholder="Ex: faltando 2 cartas, caixa amassada..."
+              rows={3}
+            />
           </div>
 
           {error && <p className={styles.error}>{error}</p>}

@@ -2,13 +2,17 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
+import Link from 'next/link'
 import styles from './page.module.scss'
 import MenuCard from '@/components/card/page'
+
+const PRAZO_MINUTOS = 30
 
 export default function HomePage() {
   const router = useRouter()
   const [name, setName] = useState('')
   const [avatar, setAvatar] = useState('')
+  const [overdueCount, setOverdueCount] = useState(0)
 
   useEffect(() => {
     if (!sessionStorage.getItem('auth')) {
@@ -17,6 +21,27 @@ export default function HomePage() {
     }
     setAvatar(sessionStorage.getItem('avatar_url') || '')
     setName(sessionStorage.getItem('name') || '')
+
+    const unidade = sessionStorage.getItem('unidade_slug')
+    if (!unidade) return
+
+    const checkOverdue = () => {
+      fetch(`/api/loans?unidade_slug=${unidade}`)
+        .then(r => r.json())
+        .then((loans: { loaned_at: string }[]) => {
+          const now = Date.now()
+          const count = loans.filter((l: { loaned_at: string }) => {
+            const iso = l.loaned_at.endsWith('Z') ? l.loaned_at : l.loaned_at + 'Z'
+            return (now - new Date(iso).getTime()) > PRAZO_MINUTOS * 60000
+          }).length
+          setOverdueCount(count)
+        })
+        .catch(() => {})
+    }
+
+    checkOverdue()
+    const interval = setInterval(checkOverdue, 60000)
+    return () => clearInterval(interval)
   }, [])
 
   const handleAvatarClick = () => {
@@ -32,7 +57,7 @@ export default function HomePage() {
 
       <header className={styles.header}>
         <Image
-          src="/logo.png"
+          src="/logo escura.png"
           alt="Ludoteca"
           width={160}
           height={50}
@@ -66,6 +91,17 @@ export default function HomePage() {
           Seja bem-vindo(a) ao <strong>Sistema Interno Ludoteca</strong>
         </p>
       </div>
+
+      {overdueCount > 0 && (
+        <Link href="/trabalho" className={styles.overdueAlert}>
+          <div className={styles.overdueIcon}>⚠️</div>
+          <div className={styles.overdueText}>
+            <strong>{overdueCount} {overdueCount === 1 ? 'jogo' : 'jogos'} com prazo vencido</strong>
+            <span>Acesse o Modo Trabalho para registrar as devoluções</span>
+          </div>
+          <span className={styles.overdueArrow}>›</span>
+        </Link>
+      )}
 
       <div className={styles.cards}>
         <MenuCard
