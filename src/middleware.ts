@@ -3,7 +3,7 @@ import type { NextRequest } from 'next/server'
 import { verifyToken } from '@/lib/jwt'
 
 // Rotas que não precisam de autenticação
-const PUBLIC_ROUTES = ['/login', '/splash', '/api/auth']
+const PUBLIC_ROUTES = ['/', '/login', '/api/auth']
 
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl
