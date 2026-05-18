@@ -33,7 +33,7 @@
 }
 
 body {
-  background: var(--primary);
+  background: var(--bg);
   color: var(--text);
   min-height: 100vh;
 }

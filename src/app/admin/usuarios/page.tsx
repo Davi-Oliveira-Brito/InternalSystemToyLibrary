@@ -2,20 +2,24 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { toast } from 'sonner';
 import styles from './page.module.scss';
 
 import AdminBanner from '@/components/adminBanner/page';
 import UserCard from '@/components/UserCard/page';
 import UserModal from '@/components/modals/userModal/page';
 import ConfirmDeleteModal from '@/components/modals/deleteGamemodal/page';
+import TempPasswordModal from './TempPasswordModal';
 
 interface UserData {
   id: string;
   name: string;
-  avatar: string;
   email: string;
   unidade_slug: string;
   avatar_url: string | null;
+  blocked: boolean;
+  must_change_password: boolean;
+  reset_requested: boolean;
 }
 
 export default function AdminUsuarios() {
@@ -29,6 +33,7 @@ export default function AdminUsuarios() {
   const [editingUser, setEditingUser] = useState<UserData | null>(null);
   const [deletingUser, setDeletingUser] = useState<UserData | null>(null);
   const [deleteLoading, setDeleteLoading] = useState(false);
+  const [resetPasswordData, setResetPasswordData] = useState<{ name: string; password: string } | null>(null);
 
   useEffect(() => {
     const auth = sessionStorage.getItem('auth');
@@ -59,10 +64,35 @@ export default function AdminUsuarios() {
       await fetch(`/api/admin/usuarios/${deletingUser.id}`, { method: 'DELETE' });
       setUsers((prev) => prev.filter((u) => u.id !== deletingUser.id));
       setDeletingUser(null);
+      toast('Estagiário removido.', { className: 'toastAdmin' });
     } catch (err) {
       console.error(err);
     } finally {
       setDeleteLoading(false);
+    }
+  };
+
+  const handleResetSenha = async (user: UserData) => {
+    try {
+      const res = await fetch(`/api/admin/usuarios/${user.id}/reset-senha`, { method: 'POST' });
+      if (!res.ok) throw new Error();
+      const data = await res.json();
+      setResetPasswordData({ name: user.name, password: data.tempPassword });
+      fetchUsers();
+    } catch {
+      toast.error('Erro ao resetar senha.');
+    }
+  };
+
+  const handleToggleBlock = async (user: UserData) => {
+    try {
+      const res = await fetch(`/api/admin/usuarios/${user.id}/bloquear`, { method: 'POST' });
+      if (!res.ok) throw new Error();
+      const updated = await res.json();
+      setUsers((prev) => prev.map((u) => u.id === user.id ? { ...u, blocked: updated.blocked } : u));
+      toast(updated.blocked ? `${user.name} bloqueado.` : `${user.name} desbloqueado.`, { className: 'toastAdmin' });
+    } catch {
+      toast.error('Erro ao alterar status.');
     }
   };
 
@@ -80,7 +110,7 @@ export default function AdminUsuarios() {
         <div className={styles.topBar}>
           <p className={styles.count}>{users.length} estagiário{users.length !== 1 ? 's' : ''}</p>
           <button className={styles.addBtn} onClick={() => setShowAddModal(true)}>
-            + Novo Usuário
+            + Novo Estagiário
           </button>
         </div>
 
@@ -88,7 +118,9 @@ export default function AdminUsuarios() {
           {loading
             ? Array.from({ length: 3 }).map((_, i) => (
                 <UserCard key={i} id="" name="" email="" unidade_slug=""
-                  onEdit={() => {}} onDelete={() => {}} isLoading />
+                  avatar_url={null} blocked={false} must_change_password={false} reset_requested={false}
+                  onEdit={() => {}} onDelete={() => {}} onResetSenha={() => {}} onToggleBlock={() => {}}
+                  isLoading />
               ))
             : users.map((user) => (
                 <UserCard
@@ -97,8 +129,14 @@ export default function AdminUsuarios() {
                   name={user.name}
                   email={user.email}
                   unidade_slug={user.unidade_slug}
+                  avatar_url={user.avatar_url}
+                  blocked={user.blocked}
+                  must_change_password={user.must_change_password}
+                  reset_requested={user.reset_requested}
                   onEdit={() => setEditingUser(user)}
                   onDelete={() => setDeletingUser(user)}
+                  onResetSenha={() => handleResetSenha(user)}
+                  onToggleBlock={() => handleToggleBlock(user)}
                 />
               ))}
 
@@ -126,6 +164,14 @@ export default function AdminUsuarios() {
           onClose={() => setDeletingUser(null)}
           onConfirm={handleDelete}
           loading={deleteLoading}
+        />
+      )}
+
+      {resetPasswordData && (
+        <TempPasswordModal
+          userName={resetPasswordData.name}
+          tempPassword={resetPasswordData.password}
+          onClose={() => setResetPasswordData(null)}
         />
       )}
     </main>

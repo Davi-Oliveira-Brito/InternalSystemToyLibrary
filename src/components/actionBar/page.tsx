@@ -14,6 +14,7 @@ interface ActionBarProps {
   loaned: number;
   selectedCategory: GameCategory | null;
   onCategoryChange: (category: GameCategory | null) => void;
+  hideAdd?: boolean;
 }
 
 export default function ActionBar({
@@ -25,6 +26,7 @@ export default function ActionBar({
   loaned,
   selectedCategory,
   onCategoryChange,
+  hideAdd = false,
 }: ActionBarProps) {
   const [open, setOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -48,9 +50,11 @@ export default function ActionBar({
   return (
     <div className={styles.wrapper}>
       <div className={styles.controls}>
-        <button className={styles.addButton} onClick={onAddClick} aria-label="Adicionar jogo">
-          <Image src="/add.svg" alt="Adicionar" width={18} height={18} />
-        </button>
+        {!hideAdd && (
+          <button className={styles.addButton} onClick={onAddClick} aria-label="Adicionar jogo">
+            <Image src="/add.svg" alt="Adicionar" width={18} height={18} />
+          </button>
+        )}
 
         <div className={styles.searchWrapper}>
           <Image src="/search.svg" alt="Buscar" width={16} height={16} className={styles.searchIcon} />

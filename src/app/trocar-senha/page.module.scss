@@ -12,17 +12,37 @@
 .content {
   display: flex;
   flex-direction: column;
-  gap: 2.5rem;
+  align-items: center;
+  gap: 2rem;
   width: 100%;
   max-width: 360px;
 }
 
 .logo {
   object-fit: contain;
-  align-self: center;
 }
 
-.forms {
+.card {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.title {
+  font-size: 22px;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0;
+}
+
+.subtitle {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.55);
+  margin: -0.75rem 0 0;
+}
+
+.fields {
   display: flex;
   flex-direction: column;
   gap: 1.75rem;
@@ -92,6 +112,12 @@
   &:hover { opacity: 1; }
 }
 
+.error {
+  font-size: 13px;
+  color: #fca5a5;
+  margin: -0.5rem 0 0;
+}
+
 .button {
   width: 100%;
   background: #E40316;
@@ -108,48 +134,4 @@
   &:hover { opacity: 0.9; }
   &:active { transform: scale(0.98); }
   &:disabled { opacity: 0.6; cursor: not-allowed; }
-}
-
-.forgotLink {
-  background: transparent;
-  border: none;
-  color: rgba(255, 255, 255, 0.45);
-  font-size: 13px;
-  font-family: inherit;
-  cursor: pointer;
-  align-self: center;
-  padding: 4px 0;
-  transition: color 0.15s;
-
-  &:hover { color: rgba(255, 255, 255, 0.8); }
-}
-
-.forgotBox {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-}
-
-.forgotTitle {
-  font-size: 20px;
-  font-weight: 700;
-  color: #ffffff;
-  margin: 0;
-}
-
-.forgotDesc {
-  font-size: 13px;
-  color: rgba(255, 255, 255, 0.5);
-  margin: -0.75rem 0 0;
-  line-height: 1.5;
-}
-
-.forgotSuccess {
-  font-size: 14px;
-  color: rgba(255, 255, 255, 0.75);
-  line-height: 1.6;
-  background: rgba(255, 255, 255, 0.07);
-  border-radius: 10px;
-  padding: 14px 16px;
-  margin: 0;
 }

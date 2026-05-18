@@ -2,106 +2,243 @@
   display: flex;
   align-items: center;
   gap: 14px;
-  background-color: #ffffff;
-  border-radius: 16px;
-  padding: 16px;
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 14px 16px;
   width: 100%;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  border: 1px solid #edf0f4;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+  transition: box-shadow 0.2s, opacity 0.2s;
+
+  &:hover { box-shadow: 0 4px 16px rgba(0, 0, 0, 0.09); }
 }
 
+.cardBlocked {
+  opacity: 0.55;
+  border-color: #fecaca;
+  background: #fff8f8;
+}
+
+// ─── Avatar ───────────────────────────────────────────────────────────────────
+
 .avatar {
-  width: 48px;
-  height: 48px;
-  min-width: 48px;
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
   border-radius: 50%;
-  background-color: #022E63;
+  background: linear-gradient(135deg, #022E63 0%, #0a4a9c 100%);
   color: #ffffff;
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 800;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  letter-spacing: 0;
 }
+
+.avatarBlocked {
+  background: linear-gradient(135deg, #9ca3af 0%, #6b7280 100%);
+}
+
+.avatarImg {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  object-fit: cover;
+  display: block;
+}
+
+// ─── Body ─────────────────────────────────────────────────────────────────────
 
 .body {
   flex: 1;
   min-width: 0;
   display: flex;
   flex-direction: column;
-  gap: 3px;
+  gap: 2px;
 }
 
 .name {
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 700;
   color: #111111;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  line-height: 1.3;
 }
 
 .email {
-  font-size: 13px;
-  color: #888888;
+  font-size: 12px;
+  color: #9ca3af;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-.unidade {
-  font-size: 12px;
-  color: #022E63;
-  background: rgba(2, 46, 99, 0.08);
-  border: 1px solid rgba(2, 46, 99, 0.15);
-  padding: 2px 8px;
-  border-radius: 20px;
-  width: fit-content;
-  margin-top: 2px;
+.badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 5px;
 }
 
-.actions {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
+%badge {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 20px;
+}
+
+.unidade {
+  @extend %badge;
+  color: #022E63;
+  background: rgba(2, 46, 99, 0.07);
+}
+
+.badgeBlocked {
+  @extend %badge;
+  color: #b91c1c;
+  background: #fee2e2;
+}
+
+.badgePending {
+  @extend %badge;
+  color: #b45309;
+  background: #fef3c7;
+}
+
+.badgeReset {
+  @extend %badge;
+  color: #ffffff;
+  background: #E40316;
+  animation: pulse 2s ease infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.7; }
+}
+
+// ─── Three-dot menu ───────────────────────────────────────────────────────────
+
+.menuWrapper {
+  position: relative;
   flex-shrink: 0;
 }
 
-%btn {
-  padding: 6px 14px;
+.menuBtn {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  width: 32px;
+  height: 32px;
   border-radius: 8px;
-  font-size: 12px;
-  font-weight: 600;
   border: none;
+  background: transparent;
+  cursor: pointer;
+  transition: background 0.15s;
+
+  span {
+    display: block;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: #9ca3af;
+    transition: background 0.15s;
+  }
+
+  &:hover {
+    background: #f3f4f6;
+    span { background: #374151; }
+  }
+}
+
+.menuDot {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #E40316;
+  border: 1.5px solid #ffffff;
+  pointer-events: none;
+}
+
+.dropdown {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 6px);
+  background: #ffffff;
+  border-radius: 12px;
+  border: 1px solid #edf0f4;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  min-width: 160px;
+  z-index: 50;
+  padding: 6px;
+  animation: dropIn 0.12s ease;
+}
+
+@keyframes dropIn {
+  from { opacity: 0; transform: translateY(-6px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.dropdownItem {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: none;
+  background: transparent;
+  font-size: 13px;
+  font-weight: 500;
+  color: #374151;
   cursor: pointer;
   font-family: inherit;
-  transition: filter 0.15s ease, transform 0.1s ease;
+  transition: background 0.12s;
 
-  &:hover { filter: brightness(1.1); }
-  &:active { transform: scale(0.97); }
+  &:hover { background: #f3f4f6; }
 }
 
-.btnEdit {
-  @extend %btn;
-  background-color: #F0F4F8;
-  color: #022E63;
+.dropdownBlock {
+  color: #dc2626;
+  &:hover { background: #fef2f2; }
 }
 
-.btnDelete {
-  @extend %btn;
-  background-color: #E40316;
-  color: #ffffff;
+.dropdownUnblock {
+  color: #15803d;
+  &:hover { background: #f0fdf4; }
 }
 
-// Skeleton
+.dropdownDivider {
+  height: 1px;
+  background: #f3f4f6;
+  margin: 4px 0;
+}
+
+.dropdownDelete {
+  color: #dc2626;
+  font-weight: 600;
+  &:hover { background: #fef2f2; }
+}
+
+// ─── Skeleton ─────────────────────────────────────────────────────────────────
+
 .skeleton { pointer-events: none; }
 
 .skeletonAvatar {
-  width: 48px;
-  height: 48px;
-  min-width: 48px;
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
   border-radius: 50%;
-  background: linear-gradient(90deg, #e0e0e0 25%, #ebebeb 50%, #e0e0e0 75%);
+  background: linear-gradient(90deg, #e5e7eb 25%, #f3f4f6 50%, #e5e7eb 75%);
   background-size: 200% 100%;
   animation: shimmer 1.4s infinite;
 }
@@ -114,9 +251,9 @@
 }
 
 .skeletonLine {
-  height: 12px;
+  height: 11px;
   border-radius: 6px;
-  background: linear-gradient(90deg, #e0e0e0 25%, #ebebeb 50%, #e0e0e0 75%);
+  background: linear-gradient(90deg, #e5e7eb 25%, #f3f4f6 50%, #e5e7eb 75%);
   background-size: 200% 100%;
   animation: shimmer 1.4s infinite;
 }

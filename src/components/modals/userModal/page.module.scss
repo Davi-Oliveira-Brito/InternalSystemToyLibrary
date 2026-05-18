@@ -122,6 +122,58 @@
   color: #ffffff;
 }
 
+// Senha temporária
+.passwordBox {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  background: #F0F4F8;
+  border-radius: 12px;
+  padding: 16px;
+}
+
+.passwordLabel {
+  font-size: 13px;
+  color: #6b7280;
+  margin: 0;
+}
+
+.passwordRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.passwordValue {
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  color: #022E63;
+  font-family: monospace;
+  flex: 1;
+}
+
+.copyBtn {
+  padding: 6px 16px;
+  border-radius: 8px;
+  background: #022E63;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  white-space: nowrap;
+  transition: filter 0.15s;
+  &:hover { filter: brightness(1.15); }
+}
+
+.passwordHint {
+  font-size: 12px;
+  color: #9ca3af;
+  margin: 0;
+}
+
 @keyframes fadeIn {
   from { opacity: 0; } to { opacity: 1; }
 }

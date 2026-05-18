@@ -8,6 +8,7 @@ export interface JWTPayload {
   email: string
   avatar_url: string | null
   unidade_slug: string | null
+  must_change_password?: boolean
 }
 
 export async function signToken(payload: JWTPayload): Promise<string> {

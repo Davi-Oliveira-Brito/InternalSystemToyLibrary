@@ -1,24 +1,16 @@
 import { NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabaseAdmin'
-import bcrypt from 'bcryptjs'
 
 export async function PUT(
   req: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
   const { id } = await params
-  const body = await req.json()
-
-  const updates: any = {
-    name: body.name,
-    email: body.email,
-    unidade_slug: body.unidade_slug,
-  }
-  if (body.password) updates.password = await bcrypt.hash(body.password, 10)
+  const { unidade_slug } = await req.json()
 
   const { data, error } = await supabaseAdmin
     .from('users')
-    .update(updates)
+    .update({ unidade_slug })
     .eq('id', id)
     .select()
     .single()

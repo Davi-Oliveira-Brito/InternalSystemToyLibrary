@@ -40,6 +40,9 @@ export interface User {
   password: string
   unidade_slug: string
   avatar_url: string | null
+  must_change_password: boolean
+  blocked: boolean
+  reset_requested: boolean
   created_at: string
 }
 
@@ -74,4 +77,5 @@ export interface SessionData {
   email: string
   avatar_url: string | null
   unidade_slug: string | null
+  must_change_password?: boolean
 }

@@ -106,6 +106,7 @@ export default function ModoTrabalho() {
         loaned={loaned}
         selectedCategory={selectedCategory}
         onCategoryChange={setSelectedCategory}
+        hideAdd
       />
 
       <section className={styles.list}>
