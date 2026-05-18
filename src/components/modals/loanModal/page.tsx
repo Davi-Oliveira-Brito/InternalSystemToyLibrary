@@ -20,8 +20,8 @@ export default function LoanModal({ gameId, gameName, unidade_slug, onClose, onS
   const [error, setError] = useState('');
 
   const handleSave = async () => {
-    if (!studentName.trim() || !studentRa.trim() || !studentClass.trim()) {
-      setError('Nome, RA e Turma são obrigatórios.');
+    if (!studentName.trim() || !studentClass.trim()) {
+      setError('Nome e Turma são obrigatórios.');
       return;
     }
 
@@ -79,17 +79,17 @@ export default function LoanModal({ gameId, gameName, unidade_slug, onClose, onS
           </div>
 
           <div className={styles.field}>
-            <label className={styles.label}>RA</label>
-            <input className={styles.input} type="text" value={studentRa}
-              onChange={(e) => setStudentRa(e.target.value)}
-              placeholder="Ex: 123456" />
-          </div>
-
-          <div className={styles.field}>
             <label className={styles.label}>Turma</label>
             <input className={styles.input} type="text" value={studentClass}
               onChange={(e) => setStudentClass(e.target.value)}
               placeholder="Ex: 9A" />
+          </div>
+
+          <div className={styles.field}>
+            <label className={styles.label}>RA <span className={styles.optional}>(opcional)</span></label>
+            <input className={styles.input} type="text" value={studentRa}
+              onChange={(e) => setStudentRa(e.target.value)}
+              placeholder="Ex: 123456" />
           </div>
 
           {error && <p className={styles.error}>{error}</p>}
