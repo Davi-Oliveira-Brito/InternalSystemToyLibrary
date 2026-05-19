@@ -5,7 +5,8 @@ import bcrypt from 'bcryptjs'
 
 export async function POST(req: Request) {
   const email = req.headers.get('x-user-email')
-  if (!email) return NextResponse.json({ error: 'Não autorizado.' }, { status: 401 })
+  const role = req.headers.get('x-user-role')
+  if (!email || !role) return NextResponse.json({ error: 'Não autorizado.' }, { status: 401 })
 
   const { newPassword } = await req.json()
   if (!newPassword || newPassword.length < 6) {
@@ -13,9 +14,10 @@ export async function POST(req: Request) {
   }
 
   const hashed = await bcrypt.hash(newPassword, 10)
+  const table = role === 'admin' ? 'admins' : 'users'
 
   const { data: user, error } = await supabaseAdmin
-    .from('users')
+    .from(table)
     .update({ password: hashed, must_change_password: false })
     .eq('email', email)
     .select('id, name, email, unidade_slug, avatar_url')
@@ -24,11 +26,11 @@ export async function POST(req: Request) {
   if (error || !user) return NextResponse.json({ error: 'Erro ao atualizar senha.' }, { status: 500 })
 
   const token = await signToken({
-    role: 'user',
+    role: role as 'admin' | 'user',
     name: user.name,
     email: user.email,
     avatar_url: user.avatar_url ?? null,
-    unidade_slug: user.unidade_slug,
+    unidade_slug: user.unidade_slug ?? null,
     must_change_password: false,
   })
 

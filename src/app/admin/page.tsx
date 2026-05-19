@@ -12,7 +12,7 @@ const cards = [
     href: '/admin/usuarios',
     image: '/cards/GerenciarJogos.png',
     title: 'Gerenciar Usuários',
-    subtitle: 'Crie, edite e remova estagiários do sistema',
+    subtitle: 'Crie, edite e remova usuários do sistema',
   },
   {
     id: 2,

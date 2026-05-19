@@ -29,7 +29,6 @@ export async function middleware(req: NextRequest) {
 
   // Força troca de senha no primeiro login
   if (
-    payload.role === 'user' &&
     payload.must_change_password &&
     !pathname.startsWith('/trocar-senha') &&
     !pathname.startsWith('/api/trocar-senha') &&
@@ -41,6 +40,11 @@ export async function middleware(req: NextRequest) {
   // Protege rotas /admin — só admin pode acessar
   if (pathname.startsWith('/admin') && payload.role !== 'admin') {
     return NextResponse.redirect(new URL('/home', req.url))
+  }
+
+  // Admin não acessa rotas de estagiário
+  if (payload.role === 'admin' && !pathname.startsWith('/admin') && !pathname.startsWith('/api')) {
+    return NextResponse.redirect(new URL('/admin', req.url))
   }
 
   const requestHeaders = new Headers(req.headers)

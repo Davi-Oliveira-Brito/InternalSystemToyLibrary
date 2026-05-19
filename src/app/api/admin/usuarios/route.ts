@@ -10,33 +10,51 @@ function generateTempPassword(): string {
 }
 
 export async function GET() {
-  const { data, error } = await supabaseAdmin
-    .from('users')
-    .select('id, name, email, unidade_slug, avatar_url, blocked, must_change_password, reset_requested, created_at')
-    .order('name')
+  const [adminsRes, usersRes] = await Promise.all([
+    supabaseAdmin
+      .from('admins')
+      .select('id, name, email, avatar_url, blocked, must_change_password, reset_requested, created_at')
+      .order('name'),
+    supabaseAdmin
+      .from('users')
+      .select('id, name, email, unidade_slug, avatar_url, blocked, must_change_password, reset_requested, created_at')
+      .order('name'),
+  ])
 
-  if (error) return NextResponse.json({ error }, { status: 500 })
-  return NextResponse.json(data)
+  if (adminsRes.error) return NextResponse.json({ error: adminsRes.error }, { status: 500 })
+  if (usersRes.error) return NextResponse.json({ error: usersRes.error }, { status: 500 })
+
+  const admins = (adminsRes.data ?? []).map(a => ({ ...a, cargo: 'admin', unidade_slug: null }))
+  const users = (usersRes.data ?? []).map(u => ({ ...u, cargo: 'estagiario' }))
+
+  const combined = [...admins, ...users].sort((a, b) => a.name.localeCompare(b.name))
+  return NextResponse.json(combined)
 }
 
 export async function POST(req: Request) {
   const body = await req.json()
+  const { name, email, unidade_slug, cargo } = body
 
   const tempPassword = generateTempPassword()
   const hashedPassword = await bcrypt.hash(tempPassword, 10)
 
+  if (cargo === 'admin') {
+    const { data, error } = await supabaseAdmin
+      .from('admins')
+      .insert({ name, email, password: hashedPassword, must_change_password: true })
+      .select()
+      .single()
+
+    if (error) return NextResponse.json({ error }, { status: 500 })
+    return NextResponse.json({ ...data, cargo: 'admin', tempPassword })
+  }
+
   const { data, error } = await supabaseAdmin
     .from('users')
-    .insert({
-      name: body.name,
-      email: body.email,
-      password: hashedPassword,
-      unidade_slug: body.unidade_slug,
-      must_change_password: true,
-    })
+    .insert({ name, email, password: hashedPassword, unidade_slug, must_change_password: true })
     .select()
     .single()
 
   if (error) return NextResponse.json({ error }, { status: 500 })
-  return NextResponse.json({ ...data, tempPassword })
+  return NextResponse.json({ ...data, cargo: 'estagiario', tempPassword })
 }

@@ -5,6 +5,7 @@ import styles from './page.module.scss';
 
 interface ConfirmDeleteModalProps {
   gameName: string;
+  itemType?: string;
   onClose: () => void;
   onConfirm: () => void;
   loading?: boolean;
@@ -12,6 +13,7 @@ interface ConfirmDeleteModalProps {
 
 export default function ConfirmDeleteModal({
   gameName,
+  itemType = 'jogo',
   onClose,
   onConfirm,
   loading = false,
@@ -28,7 +30,7 @@ export default function ConfirmDeleteModal({
           </button>
         </div>
 
-        <p className={styles.message}>Tem certeza que deseja excluir esse jogo?</p>
+        <p className={styles.message}>Tem certeza que deseja excluir esse {itemType}?</p>
 
         <div className={styles.actions}>
           <button className={styles.btnNo} onClick={onClose} disabled={loading}>

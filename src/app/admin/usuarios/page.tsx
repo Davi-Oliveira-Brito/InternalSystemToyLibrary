@@ -15,7 +15,8 @@ interface UserData {
   id: string;
   name: string;
   email: string;
-  unidade_slug: string;
+  cargo: 'admin' | 'estagiario';
+  unidade_slug: string | null;
   avatar_url: string | null;
   blocked: boolean;
   must_change_password: boolean;
@@ -61,10 +62,10 @@ export default function AdminUsuarios() {
     if (!deletingUser) return;
     setDeleteLoading(true);
     try {
-      await fetch(`/api/admin/usuarios/${deletingUser.id}`, { method: 'DELETE' });
+      await fetch(`/api/admin/usuarios/${deletingUser.id}?cargo=${deletingUser.cargo}`, { method: 'DELETE' });
       setUsers((prev) => prev.filter((u) => u.id !== deletingUser.id));
       setDeletingUser(null);
-      toast('Estagiário removido.', { className: 'toastAdmin' });
+      toast('Usuário removido.', { className: 'toastAdmin' });
     } catch (err) {
       console.error(err);
     } finally {
@@ -74,7 +75,11 @@ export default function AdminUsuarios() {
 
   const handleResetSenha = async (user: UserData) => {
     try {
-      const res = await fetch(`/api/admin/usuarios/${user.id}/reset-senha`, { method: 'POST' });
+      const res = await fetch(`/api/admin/usuarios/${user.id}/reset-senha`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ cargo: user.cargo }),
+      });
       if (!res.ok) throw new Error();
       const data = await res.json();
       setResetPasswordData({ name: user.name, password: data.tempPassword });
@@ -86,7 +91,11 @@ export default function AdminUsuarios() {
 
   const handleToggleBlock = async (user: UserData) => {
     try {
-      const res = await fetch(`/api/admin/usuarios/${user.id}/bloquear`, { method: 'POST' });
+      const res = await fetch(`/api/admin/usuarios/${user.id}/bloquear`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ cargo: user.cargo }),
+      });
       if (!res.ok) throw new Error();
       const updated = await res.json();
       setUsers((prev) => prev.map((u) => u.id === user.id ? { ...u, blocked: updated.blocked } : u));
@@ -103,21 +112,21 @@ export default function AdminUsuarios() {
         avatar={avatar}
         username={name}
         title="Gerenciar Usuários"
-        subtitle="Crie, edite e remova estagiários do sistema"
+        subtitle="Crie, edite e remova usuários do sistema"
       />
 
       <div className={styles.content}>
         <div className={styles.topBar}>
-          <p className={styles.count}>{users.length} estagiário{users.length !== 1 ? 's' : ''}</p>
+          <p className={styles.count}>{users.length} usuário{users.length !== 1 ? 's' : ''}</p>
           <button className={styles.addBtn} onClick={() => setShowAddModal(true)}>
-            + Novo Estagiário
+            + Novo Usuário
           </button>
         </div>
 
         <div className={styles.list}>
           {loading
             ? Array.from({ length: 3 }).map((_, i) => (
-                <UserCard key={i} id="" name="" email="" unidade_slug=""
+                <UserCard key={i} id="" name="" email="" cargo="estagiario" unidade_slug={null}
                   avatar_url={null} blocked={false} must_change_password={false} reset_requested={false}
                   onEdit={() => {}} onDelete={() => {}} onResetSenha={() => {}} onToggleBlock={() => {}}
                   isLoading />
@@ -128,6 +137,7 @@ export default function AdminUsuarios() {
                   id={user.id}
                   name={user.name}
                   email={user.email}
+                  cargo={user.cargo}
                   unidade_slug={user.unidade_slug}
                   avatar_url={user.avatar_url}
                   blocked={user.blocked}
@@ -161,6 +171,7 @@ export default function AdminUsuarios() {
       {deletingUser && (
         <ConfirmDeleteModal
           gameName={deletingUser.name}
+          itemType="usuário"
           onClose={() => setDeletingUser(null)}
           onConfirm={handleDelete}
           loading={deleteLoading}

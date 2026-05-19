@@ -14,12 +14,17 @@ export async function POST(req: Request) {
     .single()
 
   if (admin && await bcrypt.compare(password, admin.password)) {
+    if (admin.blocked) {
+      return NextResponse.json({ ok: false, blocked: true }, { status: 401 })
+    }
+
     const token = await signToken({
       role: 'admin',
       name: admin.name,
       email: admin.email,
       avatar_url: admin.avatar_url ?? null,
       unidade_slug: null,
+      must_change_password: admin.must_change_password ?? false,
     })
 
     const res = NextResponse.json({
@@ -29,6 +34,7 @@ export async function POST(req: Request) {
       email: admin.email,
       avatar_url: admin.avatar_url ?? null,
       unidade_slug: null,
+      must_change_password: admin.must_change_password ?? false,
     })
 
     res.cookies.set('token', token, {

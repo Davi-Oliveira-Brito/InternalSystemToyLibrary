@@ -9,7 +9,8 @@ interface UserData {
   id?: string;
   name: string;
   email: string;
-  unidade_slug: string;
+  cargo: 'admin' | 'estagiario';
+  unidade_slug: string | null;
 }
 
 interface UserModalProps {
@@ -23,6 +24,8 @@ export default function UserModal({ user, onClose, onSuccess }: UserModalProps) 
 
   const [name, setName] = useState(user?.name || '');
   const [email, setEmail] = useState(user?.email || '');
+  const [cargo, setCargo] = useState<'admin' | 'estagiario'>(user?.cargo || 'estagiario');
+  const [newCargo, setNewCargo] = useState<'admin' | 'estagiario'>(user?.cargo || 'estagiario');
   const [unidade_slug, setUnidadeSlug] = useState(user?.unidade_slug || '');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -31,10 +34,14 @@ export default function UserModal({ user, onClose, onSuccess }: UserModalProps) 
 
   const handleSave = async () => {
     if (isEdit) {
-      if (!unidade_slug) { setError('Selecione uma unidade.'); return; }
+      if (newCargo === 'estagiario' && !unidade_slug) { setError('Selecione uma unidade.'); return; }
     } else {
-      if (!name.trim() || !email.trim() || !unidade_slug) {
-        setError('Todos os campos são obrigatórios.');
+      if (!name.trim() || !email.trim()) {
+        setError('Nome e email são obrigatórios.');
+        return;
+      }
+      if (cargo === 'estagiario' && !unidade_slug) {
+        setError('Selecione uma unidade para o estagiário.');
         return;
       }
     }
@@ -46,8 +53,8 @@ export default function UserModal({ user, onClose, onSuccess }: UserModalProps) 
       const url = isEdit ? `/api/admin/usuarios/${user!.id}` : '/api/admin/usuarios';
       const method = isEdit ? 'PUT' : 'POST';
       const body = isEdit
-        ? { unidade_slug }
-        : { name: name.trim(), email: email.trim(), unidade_slug };
+        ? { cargo: user!.cargo, newCargo, unidade_slug: newCargo === 'estagiario' ? unidade_slug : null }
+        : { name: name.trim(), email: email.trim(), unidade_slug: cargo === 'estagiario' ? unidade_slug : null, cargo };
 
       const res = await fetch(url, {
         method,
@@ -86,21 +93,21 @@ export default function UserModal({ user, onClose, onSuccess }: UserModalProps) 
       <div className={styles.overlay} onClick={onClose}>
         <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
           <div className={styles.header}>
-            <h2 className={styles.title}>Estagiário criado!</h2>
+            <h2 className={styles.title}>{cargo === 'admin' ? 'Administrador criado!' : 'Estagiário criado!'}</h2>
             <button className={styles.closeBtn} onClick={onClose} aria-label="Fechar">
               <Image src="/close.svg" alt="Fechar" width={20} height={20} />
             </button>
           </div>
 
           <div className={styles.passwordBox}>
-            <p className={styles.passwordLabel}>Senha temporária — compartilhe com o estagiário:</p>
+            <p className={styles.passwordLabel}>Senha temporária — compartilhe com o usuário:</p>
             <div className={styles.passwordRow}>
               <span className={styles.passwordValue}>{tempPassword}</span>
               <button className={styles.copyBtn} onClick={handleCopy}>
                 {copied ? 'Copiado!' : 'Copiar'}
               </button>
             </div>
-            <p className={styles.passwordHint}>O estagiário será obrigado a criar uma nova senha no primeiro login.</p>
+            <p className={styles.passwordHint}>O usuário será obrigado a criar uma nova senha no primeiro login.</p>
           </div>
 
           <div className={styles.actions}>
@@ -115,14 +122,38 @@ export default function UserModal({ user, onClose, onSuccess }: UserModalProps) 
     <div className={styles.overlay} onClick={onClose}>
       <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
         <div className={styles.header}>
-          <h2 className={styles.title}>{isEdit ? 'Trocar Unidade' : 'Novo Estagiário'}</h2>
+          <h2 className={styles.title}>{isEdit ? 'Editar Usuário' : 'Novo Usuário'}</h2>
           <button className={styles.closeBtn} onClick={onClose} aria-label="Fechar">
             <Image src="/close.svg" alt="Fechar" width={20} height={20} />
           </button>
         </div>
 
         <div className={styles.fields}>
-          {!isEdit && (
+          {isEdit ? (
+            <>
+              <div className={styles.field}>
+                <label className={styles.label}>Permissão</label>
+                <select className={styles.input} value={newCargo}
+                  onChange={(e) => setNewCargo(e.target.value as 'admin' | 'estagiario')}>
+                  <option value="estagiario">Estagiário</option>
+                  <option value="admin">Administrador</option>
+                </select>
+              </div>
+
+              {newCargo === 'estagiario' && (
+                <div className={styles.field}>
+                  <label className={styles.label}>Unidade</label>
+                  <select className={styles.input} value={unidade_slug}
+                    onChange={(e) => setUnidadeSlug(e.target.value)}>
+                    <option value="">Selecione...</option>
+                    {UNIDADES.map((u) => (
+                      <option key={u.slug} value={u.slug}>{u.name}</option>
+                    ))}
+                  </select>
+                </div>
+              )}
+            </>
+          ) : (
             <>
               <div className={styles.field}>
                 <label className={styles.label}>Nome</label>
@@ -135,19 +166,30 @@ export default function UserModal({ user, onClose, onSuccess }: UserModalProps) 
                 <input className={styles.input} type="email" value={email}
                   onChange={(e) => setEmail(e.target.value)} placeholder="email@exemplo.com" />
               </div>
+
+              <div className={styles.field}>
+                <label className={styles.label}>Permissão</label>
+                <select className={styles.input} value={cargo}
+                  onChange={(e) => setCargo(e.target.value as 'admin' | 'estagiario')}>
+                  <option value="estagiario">Estagiário</option>
+                  <option value="admin">Administrador</option>
+                </select>
+              </div>
+
+              {cargo === 'estagiario' && (
+                <div className={styles.field}>
+                  <label className={styles.label}>Unidade</label>
+                  <select className={styles.input} value={unidade_slug}
+                    onChange={(e) => setUnidadeSlug(e.target.value)}>
+                    <option value="">Selecione...</option>
+                    {UNIDADES.map((u) => (
+                      <option key={u.slug} value={u.slug}>{u.name}</option>
+                    ))}
+                  </select>
+                </div>
+              )}
             </>
           )}
-
-          <div className={styles.field}>
-            <label className={styles.label}>Unidade</label>
-            <select className={styles.input} value={unidade_slug}
-              onChange={(e) => setUnidadeSlug(e.target.value)}>
-              <option value="">Selecione...</option>
-              {UNIDADES.map((u) => (
-                <option key={u.slug} value={u.slug}>{u.name}</option>
-              ))}
-            </select>
-          </div>
 
           {error && <p className={styles.error}>{error}</p>}
         </div>

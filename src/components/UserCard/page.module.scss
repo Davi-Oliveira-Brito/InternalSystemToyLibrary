@@ -97,6 +97,12 @@
   background: rgba(2, 46, 99, 0.07);
 }
 
+.badgeCargo {
+  @extend %badge;
+  color: #5b21b6;
+  background: rgba(91, 33, 182, 0.08);
+}
+
 .badgeBlocked {
   @extend %badge;
   color: #b91c1c;

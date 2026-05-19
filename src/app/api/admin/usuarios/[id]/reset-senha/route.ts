@@ -10,16 +10,18 @@ function generateTempPassword(): string {
 }
 
 export async function POST(
-  _: Request,
+  req: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
   const { id } = await params
+  const { cargo } = await req.json()
+  const table = cargo === 'admin' ? 'admins' : 'users'
 
   const tempPassword = generateTempPassword()
   const hashedPassword = await bcrypt.hash(tempPassword, 10)
 
   const { error } = await supabaseAdmin
-    .from('users')
+    .from(table)
     .update({ password: hashedPassword, must_change_password: true, reset_requested: false })
     .eq('id', id)
 

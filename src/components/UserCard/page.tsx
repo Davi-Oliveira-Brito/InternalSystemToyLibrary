@@ -8,7 +8,8 @@ interface UserCardProps {
   id: string;
   name: string;
   email: string;
-  unidade_slug: string;
+  cargo: 'admin' | 'estagiario';
+  unidade_slug: string | null;
   avatar_url: string | null;
   blocked: boolean;
   must_change_password: boolean;
@@ -28,7 +29,7 @@ const UNIDADE_NAMES: Record<string, string> = {
 }
 
 export default function UserCard({
-  name, email, unidade_slug, avatar_url, blocked, must_change_password, reset_requested,
+  name, email, cargo, unidade_slug, avatar_url, blocked, must_change_password, reset_requested,
   onEdit, onDelete, onResetSenha, onToggleBlock, isLoading,
 }: UserCardProps) {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -71,7 +72,10 @@ export default function UserCard({
         <span className={styles.name}>{name}</span>
         <span className={styles.email}>{email}</span>
         <div className={styles.badges}>
-          <span className={styles.unidade}>{UNIDADE_NAMES[unidade_slug] ?? unidade_slug}</span>
+          {cargo === 'admin'
+            ? <span className={styles.badgeCargo}>Administrador</span>
+            : <span className={styles.unidade}>{UNIDADE_NAMES[unidade_slug ?? ''] ?? unidade_slug}</span>
+          }
           {blocked && <span className={styles.badgeBlocked}>Bloqueado</span>}
           {reset_requested && !blocked && (
             <span className={styles.badgeReset}>Solicitou reset</span>
@@ -97,7 +101,7 @@ export default function UserCard({
         {menuOpen && (
           <div className={styles.dropdown}>
             <button className={styles.dropdownItem} onClick={() => { onEdit(); setMenuOpen(false); }}>
-              Trocar unidade
+              Editar
             </button>
             <button className={styles.dropdownItem} onClick={() => { onResetSenha(); setMenuOpen(false); }}>
               Resetar senha
