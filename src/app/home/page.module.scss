@@ -32,6 +32,16 @@
     width: 200px !important;
     height: 65px !important;
   }
+
+  @media (min-width: 1024px) {
+    display: none;
+  }
+}
+
+@media (min-width: 1024px) {
+  .header {
+    justify-content: flex-end;
+  }
 }
 
 .avatar {
