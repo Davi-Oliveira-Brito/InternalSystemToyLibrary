@@ -14,27 +14,30 @@ export async function POST(req: Request) {
   }
 
   const hashed = await bcrypt.hash(newPassword, 10)
-  const table = role === 'admin' ? 'admins' : 'users'
 
-  const selectCols = role === 'admin' ? 'id, name, email, avatar_url' : 'id, name, email, unidade_slug, avatar_url'
+  let tokenPayload: Parameters<typeof signToken>[0]
 
-  const { data: user, error } = await supabaseAdmin
-    .from(table)
-    .update({ password: hashed, must_change_password: false })
-    .eq('email', email)
-    .select(selectCols)
-    .single()
+  if (role === 'admin') {
+    const { data, error } = await supabaseAdmin
+      .from('admins')
+      .update({ password: hashed, must_change_password: false })
+      .eq('email', email)
+      .select('id, name, email, avatar_url')
+      .single()
+    if (error || !data) return NextResponse.json({ error: 'Erro ao atualizar senha.' }, { status: 500 })
+    tokenPayload = { role: 'admin', name: data.name, email: data.email, avatar_url: data.avatar_url ?? null, unidade_slug: null, must_change_password: false }
+  } else {
+    const { data, error } = await supabaseAdmin
+      .from('users')
+      .update({ password: hashed, must_change_password: false })
+      .eq('email', email)
+      .select('id, name, email, unidade_slug, avatar_url')
+      .single()
+    if (error || !data) return NextResponse.json({ error: 'Erro ao atualizar senha.' }, { status: 500 })
+    tokenPayload = { role: 'user', name: data.name, email: data.email, avatar_url: data.avatar_url ?? null, unidade_slug: data.unidade_slug, must_change_password: false }
+  }
 
-  if (error || !user) return NextResponse.json({ error: 'Erro ao atualizar senha.' }, { status: 500 })
-
-  const token = await signToken({
-    role: role as 'admin' | 'user',
-    name: user.name,
-    email: user.email,
-    avatar_url: user.avatar_url ?? null,
-    unidade_slug: user.unidade_slug ?? null,
-    must_change_password: false,
-  })
+  const token = await signToken(tokenPayload)
 
   const res = NextResponse.json({ ok: true })
   res.cookies.set('token', token, {
