@@ -43,7 +43,12 @@ export async function middleware(req: NextRequest) {
   }
 
   // Admin não acessa rotas de estagiário
-  if (payload.role === 'admin' && !pathname.startsWith('/admin') && !pathname.startsWith('/api')) {
+  if (
+    payload.role === 'admin' &&
+    !pathname.startsWith('/admin') &&
+    !pathname.startsWith('/api') &&
+    !pathname.startsWith('/trocar-senha')
+  ) {
     return NextResponse.redirect(new URL('/admin', req.url))
   }
 

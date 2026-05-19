@@ -16,11 +16,13 @@ export async function POST(req: Request) {
   const hashed = await bcrypt.hash(newPassword, 10)
   const table = role === 'admin' ? 'admins' : 'users'
 
+  const selectCols = role === 'admin' ? 'id, name, email, avatar_url' : 'id, name, email, unidade_slug, avatar_url'
+
   const { data: user, error } = await supabaseAdmin
     .from(table)
     .update({ password: hashed, must_change_password: false })
     .eq('email', email)
-    .select('id, name, email, unidade_slug, avatar_url')
+    .select(selectCols)
     .single()
 
   if (error || !user) return NextResponse.json({ error: 'Erro ao atualizar senha.' }, { status: 500 })

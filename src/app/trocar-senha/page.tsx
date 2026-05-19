@@ -39,8 +39,9 @@ export default function TrocarSenhaPage() {
         throw new Error(data.error || 'Erro ao trocar senha.')
       }
 
-      toast('Senha criada com sucesso!', { duration: 3000, className: 'toast' })
-      router.push('/home')
+      const role = sessionStorage.getItem('role')
+      toast('Senha criada com sucesso!', { duration: 3000, className: role === 'admin' ? 'toastAdmin' : 'toast' })
+      router.push(role === 'admin' ? '/admin' : '/home')
     } catch (err: any) {
       setError(err.message)
     } finally {
