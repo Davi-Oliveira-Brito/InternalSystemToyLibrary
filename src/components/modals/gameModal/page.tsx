@@ -17,32 +17,17 @@ export default function GameModal({ unidade_slug, onClose, onSuccess }: GameModa
   const [name, setName] = useState('');
   const [category, setCategory] = useState<GameCategory | ''>('');
   const [totalCopies, setTotalCopies] = useState('');
-  const [imageUrl, setImageUrl] = useState('');
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [isDragging, setIsDragging] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const hasFile = imageFile !== null;
-  const hasUrl = imageUrl.trim() !== '';
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+  const applyFile = (file: File) => {
+    if (!file.type.startsWith('image/')) return;
     setImageFile(file);
-    setImageUrl(''); // desativa URL
     setImagePreview(URL.createObjectURL(file));
-  };
-
-  const handleUrlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setImageUrl(e.target.value);
-    if (e.target.value.trim()) {
-      // desativa upload
-      setImageFile(null);
-      setImagePreview(null);
-      if (fileInputRef.current) fileInputRef.current.value = '';
-    }
   };
 
   const clearFile = () => {
@@ -51,17 +36,32 @@ export default function GameModal({ unidade_slug, onClose, onSuccess }: GameModa
     if (fileInputRef.current) fileInputRef.current.value = '';
   };
 
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(false);
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(false);
+    const file = e.dataTransfer.files?.[0];
+    if (file) applyFile(file);
+  };
+
   const uploadImage = async (file: File): Promise<string> => {
     const compressed = await compressImage(file);
-    const ext = 'jpg';
-    const path = `${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+    const path = `${Date.now()}-${Math.random().toString(36).slice(2)}.jpg`;
     const { error } = await supabase.storage.from('games').upload(path, compressed, {
       contentType: 'image/jpeg',
       upsert: false,
     });
     if (error) throw new Error('Erro ao fazer upload da imagem.');
-    const { data } = supabase.storage.from('games').getPublicUrl(path);
-    return data.publicUrl;
+    return supabase.storage.from('games').getPublicUrl(path).data.publicUrl;
   };
 
   const handleSave = async () => {
@@ -74,12 +74,7 @@ export default function GameModal({ unidade_slug, onClose, onSuccess }: GameModa
 
     try {
       let finalImageUrl: string | null = null;
-
-      if (imageFile) {
-        finalImageUrl = await uploadImage(imageFile);
-      } else if (imageUrl.trim()) {
-        finalImageUrl = imageUrl.trim();
-      }
+      if (imageFile) finalImageUrl = await uploadImage(imageFile);
 
       const res = await fetch('/api/games', {
         method: 'POST',
@@ -114,14 +109,12 @@ export default function GameModal({ unidade_slug, onClose, onSuccess }: GameModa
         </div>
 
         <div className={styles.fields}>
-          {/* Nome */}
           <div className={styles.field}>
             <label className={styles.label}>Nome</label>
             <input className={styles.input} type="text" value={name}
               onChange={(e) => setName(e.target.value)} placeholder="Ex: Uno Cards" />
           </div>
 
-          {/* Categoria */}
           <div className={styles.field}>
             <label className={styles.label}>Categoria</label>
             <select className={styles.input} value={category}
@@ -133,39 +126,51 @@ export default function GameModal({ unidade_slug, onClose, onSuccess }: GameModa
             </select>
           </div>
 
-          {/* Quantidade */}
           <div className={styles.field}>
             <label className={styles.label}>Quantidade</label>
             <input className={styles.input} type="number" min={1} value={totalCopies}
               onChange={(e) => setTotalCopies(e.target.value)} placeholder="Ex: 3" />
           </div>
 
-          {/* Imagem — upload */}
-          <div className={`${styles.field} ${hasUrl ? styles.fieldDisabled : ''}`}>
-            <label className={styles.label}>Upload de Imagem</label>
-            <div className={styles.uploadWrapper}>
-              <button type="button" className={styles.uploadBtn}
-                onClick={() => !hasUrl && fileInputRef.current?.click()}
-                disabled={hasUrl}>
-                {imagePreview ? 'Trocar imagem' : 'Escolher arquivo'}
-              </button>
-              {imagePreview && (
-                <div className={styles.previewWrapper}>
-                  <Image src={imagePreview} alt="Preview" width={48} height={48} className={styles.preview} />
-                  <button type="button" className={styles.clearBtn} onClick={clearFile}>✕</button>
-                </div>
-              )}
-              <input ref={fileInputRef} type="file" accept="image/*"
-                className={styles.hiddenInput} onChange={handleFileChange} />
-            </div>
-          </div>
+          <div className={styles.field}>
+            <label className={styles.label}>Imagem <span className={styles.optional}>(opcional)</span></label>
 
-          {/* Imagem — URL */}
-          <div className={`${styles.field} ${hasFile ? styles.fieldDisabled : ''}`}>
-            <label className={styles.label}>URL da Imagem</label>
-            <input className={styles.input} type="text" value={imageUrl}
-              onChange={handleUrlChange} placeholder="https://..."
-              disabled={hasFile} />
+            {imagePreview ? (
+              <div className={styles.previewZone}>
+                <Image src={imagePreview} alt="Preview" width={72} height={72} className={styles.preview} />
+                <div className={styles.previewInfo}>
+                  <span className={styles.previewName}>{imageFile?.name}</span>
+                  <button type="button" className={styles.clearBtn} onClick={clearFile}>
+                    Remover
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <div
+                className={`${styles.dropZone} ${isDragging ? styles.dropZoneDragging : ''}`}
+                onDragOver={handleDragOver}
+                onDragLeave={handleDragLeave}
+                onDrop={handleDrop}
+                onClick={() => fileInputRef.current?.click()}
+              >
+                <svg className={styles.dropIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                  <path strokeLinecap="round" strokeLinejoin="round"
+                    d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
+                </svg>
+                <span className={styles.dropText}>
+                  {isDragging ? 'Solte aqui' : 'Arraste ou clique para selecionar'}
+                </span>
+                <span className={styles.dropHint}>PNG, JPG, WEBP</span>
+              </div>
+            )}
+
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              className={styles.hiddenInput}
+              onChange={(e) => { const f = e.target.files?.[0]; if (f) applyFile(f); }}
+            />
           </div>
 
           {error && <p className={styles.error}>{error}</p>}

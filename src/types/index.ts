@@ -1,4 +1,4 @@
-export type GameCategory = 'Cartas' | 'Tabuleiro' | 'RPG' | 'Cooperativo' | 'Estratégia'
+export type GameCategory = 'Cartas' | 'Tabuleiro' | 'RPG' | 'Cooperativo' | 'Estratégia' | 'Outro'
 
 export const GAME_CATEGORIES: GameCategory[] = [
   'Cartas',
@@ -6,6 +6,7 @@ export const GAME_CATEGORIES: GameCategory[] = [
   'RPG',
   'Cooperativo',
   'Estratégia',
+  'Outro',
 ]
 
 export const UNIDADES = [

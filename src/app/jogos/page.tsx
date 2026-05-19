@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
+import { toast } from 'sonner';
 import styles from './page.module.scss';
 import { Game, GameCategory } from '@/types';
 
@@ -70,11 +71,17 @@ export default function GerenciarJogos() {
     if (!deletingGame) return;
     setDeleteLoading(true);
     try {
-      await fetch(`/api/games/${deletingGame.id}`, { method: 'DELETE' });
+      const res = await fetch(`/api/games/${deletingGame.id}`, { method: 'DELETE' });
+      if (!res.ok) {
+        const data = await res.json();
+        toast.error(data.error || 'Não foi possível excluir o jogo.');
+        return;
+      }
       setGames((prev) => prev.filter((g) => g.id !== deletingGame.id));
       setDeletingGame(null);
     } catch (err) {
       console.error('Erro ao excluir jogo:', err);
+      toast.error('Erro ao excluir jogo.');
     } finally {
       setDeleteLoading(false);
     }

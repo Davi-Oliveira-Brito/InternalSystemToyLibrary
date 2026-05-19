@@ -102,57 +102,110 @@
   }
 }
 
-// Upload
-.uploadWrapper {
+// Drop zone
+.dropZone {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 10px;
-}
-
-.uploadBtn {
-  padding: 7px 16px;
-  border-radius: 8px;
-  border: 1px solid #E5E7EB;
-  background: transparent;
-  color: #6b7280;
-  font-size: 13px;
-  font-family: inherit;
-  cursor: pointer;
-  transition: border-color 0.15s ease, color 0.15s ease;
-
-  &:hover:not(:disabled) {
-    border-color: #022E63;
-    color: #022E63;
-  }
-
-  &:disabled { cursor: not-allowed; }
-}
-
-.hiddenInput { display: none; }
-
-.previewWrapper {
-  display: flex;
-  align-items: center;
+  justify-content: center;
   gap: 6px;
+  border: 1.5px dashed #d1d5db;
+  border-radius: 12px;
+  padding: 24px 16px;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+  user-select: none;
+
+  &:hover {
+    border-color: #022E63;
+    background: rgba(2, 46, 99, 0.03);
+  }
+}
+
+.dropZoneDragging {
+  border-color: #022E63;
+  background: rgba(2, 46, 99, 0.06);
+}
+
+.dropIcon {
+  width: 28px;
+  height: 28px;
+  color: #9ca3af;
+  transition: color 0.15s;
+  pointer-events: none;
+
+  .dropZone:hover &,
+  .dropZoneDragging & { color: #022E63; }
+}
+
+.dropText {
+  font-size: 13px;
+  font-weight: 500;
+  color: #6b7280;
+  pointer-events: none;
+}
+
+.dropHint {
+  font-size: 11px;
+  color: #9ca3af;
+  pointer-events: none;
+}
+
+// Preview
+.previewZone {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 12px;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  background: #f9fafb;
 }
 
 .preview {
-  border-radius: 6px;
+  border-radius: 8px;
   object-fit: cover;
-  width: 48px;
-  height: 48px;
+  width: 72px;
+  height: 72px;
+  flex-shrink: 0;
+}
+
+.previewInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.previewName {
+  font-size: 12px;
+  color: #6b7280;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 200px;
 }
 
 .clearBtn {
   background: transparent;
   border: none;
   color: #E40316;
-  font-size: 14px;
+  font-size: 12px;
+  font-weight: 600;
+  font-family: inherit;
   cursor: pointer;
-  padding: 2px 4px;
-  line-height: 1;
+  padding: 0;
+  text-align: left;
 
-  &:hover { opacity: 0.8; }
+  &:hover { opacity: 0.75; }
+}
+
+.hiddenInput { display: none; }
+
+.optional {
+  font-size: 11px;
+  color: #9ca3af;
+  font-weight: 400;
 }
 
 .error {

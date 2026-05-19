@@ -15,6 +15,8 @@ interface ActionBarProps {
   selectedCategory: GameCategory | null;
   onCategoryChange: (category: GameCategory | null) => void;
   hideAdd?: boolean;
+  onlyAvailable?: boolean;
+  onOnlyAvailableChange?: (v: boolean) => void;
 }
 
 export default function ActionBar({
@@ -27,6 +29,8 @@ export default function ActionBar({
   selectedCategory,
   onCategoryChange,
   hideAdd = false,
+  onlyAvailable,
+  onOnlyAvailableChange,
 }: ActionBarProps) {
   const [open, setOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -116,6 +120,14 @@ export default function ActionBar({
         <span className={styles.statRed}>
           Emprestados: <strong>{loaned}</strong>
         </span>
+        {onOnlyAvailableChange && (
+          <button
+            className={`${styles.toggleAvailable} ${onlyAvailable ? styles.toggleAvailableOn : ''}`}
+            onClick={() => onOnlyAvailableChange(!onlyAvailable)}
+          >
+            Só disponíveis
+          </button>
+        )}
       </div>
     </div>
   );

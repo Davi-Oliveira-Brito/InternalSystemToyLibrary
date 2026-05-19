@@ -125,6 +125,23 @@
 
 .hiddenInput { display: none; }
 
+.removePhotoLabel {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: #E40316;
+  cursor: pointer;
+  user-select: none;
+
+  input[type='checkbox'] {
+    width: 15px;
+    height: 15px;
+    accent-color: #E40316;
+    cursor: pointer;
+  }
+}
+
 // Info rows
 .infoRow {
   display: flex;

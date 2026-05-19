@@ -20,6 +20,7 @@ export default function Perfil() {
   const [newPassword, setNewPassword] = useState('');
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [removePhoto, setRemovePhoto] = useState(false);
 
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState('');
@@ -90,7 +91,9 @@ export default function Perfil() {
     try {
       let finalAvatarUrl: string | null | undefined = undefined;
 
-      if (imageFile) {
+      if (removePhoto) {
+        finalAvatarUrl = null;
+      } else if (imageFile) {
         finalAvatarUrl = await uploadAvatar(imageFile);
       }
 
@@ -116,10 +119,12 @@ export default function Perfil() {
       sessionStorage.setItem('name', resData.name);
       if (resData.avatar_url) sessionStorage.setItem('avatar_url', resData.avatar_url);
 
+      sessionStorage.setItem('avatar_url', resData.avatar_url ?? '');
       setName(resData.name);
-      setAvatarUrl(resData.avatar_url);
+      setAvatarUrl(resData.avatar_url ?? null);
       setImageFile(null);
       setImagePreview(null);
+      setRemovePhoto(false);
       setCurrentPassword('');
       setNewPassword('');
       toast('Perfil atualizado com sucesso!' , {className: "toast"});
@@ -130,7 +135,7 @@ export default function Perfil() {
     }
   };
 
-  const currentAvatar = imagePreview || avatarUrl;
+  const currentAvatar = removePhoto ? null : (imagePreview || avatarUrl);
 
   return (
     <main className={styles.page}>
@@ -161,6 +166,19 @@ export default function Perfil() {
           <input ref={fileInputRef} type="file" accept="image/*"
             className={styles.hiddenInput} onChange={handleFileChange} />
           <p className={styles.avatarHint}>Clique na foto para alterar</p>
+          {(avatarUrl || imagePreview) && (
+            <label className={styles.removePhotoLabel}>
+              <input
+                type="checkbox"
+                checked={removePhoto}
+                onChange={(e) => {
+                  setRemovePhoto(e.target.checked);
+                  if (e.target.checked) { setImageFile(null); setImagePreview(null); }
+                }}
+              />
+              Remover foto
+            </label>
+          )}
         </div>
 
         {/* Infos fixas */}

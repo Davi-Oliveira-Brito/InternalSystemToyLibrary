@@ -1,23 +1,16 @@
 'use client';
 
-import { GAME_CATEGORIES, GameCategory, Game} from '@/types';
+import { GAME_CATEGORIES, GameCategory, Game } from '@/types';
 import { supabase } from '@/lib/supabase';
 import { useState, useRef } from 'react';
 import { compressImage } from '@/lib/imageUtils';
-
 import Image from 'next/image';
 import styles from './page.module.scss';
- 
 
 interface EditGameModalProps {
   game: Game;
   onClose: () => void;
   onSuccess: () => void;
-}
-
-function isSupabaseUrl(url: string | null): boolean {
-  if (!url) return false;
-  return url.includes('.supabase.co/storage');
 }
 
 export default function EditGameModal({ game, onClose, onSuccess }: EditGameModalProps) {
@@ -26,50 +19,41 @@ export default function EditGameModal({ game, onClose, onSuccess }: EditGameModa
   const [totalCopies, setTotalCopies] = useState(String(game.total_copies));
   const [observacao, setObservacao] = useState(game.observacao || '');
 
-  // Se a imagem atual veio do Storage, não preenche o campo URL
-  const initialUrl = game.image_url && !isSupabaseUrl(game.image_url) ? game.image_url : '';
-  const [imageUrl, setImageUrl] = useState(initialUrl);
+  const [imagePreview, setImagePreview] = useState<string | null>(game.image_url ?? null);
   const [imageFile, setImageFile] = useState<File | null>(null);
-
-  // Se veio do Storage, mostra como preview atual
-  const [imagePreview, setImagePreview] = useState<string | null>(
-    game.image_url && isSupabaseUrl(game.image_url) ? game.image_url : null
-  );
-  const [isExistingStorageImage, setIsExistingStorageImage] = useState(
-    game.image_url ? isSupabaseUrl(game.image_url) : false
-  );
+  const [isDragging, setIsDragging] = useState(false);
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const hasFile = imageFile !== null;
-  const hasUrl = imageUrl.trim() !== '' && !hasFile;
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+  const applyFile = (file: File) => {
+    if (!file.type.startsWith('image/')) return;
     setImageFile(file);
-    setImageUrl('');
-    setIsExistingStorageImage(false);
     setImagePreview(URL.createObjectURL(file));
-  };
-
-  const handleUrlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setImageUrl(e.target.value);
-    if (e.target.value.trim()) {
-      setImageFile(null);
-      setImagePreview(null);
-      setIsExistingStorageImage(false);
-      if (fileInputRef.current) fileInputRef.current.value = '';
-    }
   };
 
   const clearImage = () => {
     setImageFile(null);
     setImagePreview(null);
-    setIsExistingStorageImage(false);
     if (fileInputRef.current) fileInputRef.current.value = '';
+  };
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(false);
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(false);
+    const file = e.dataTransfer.files?.[0];
+    if (file) applyFile(file);
   };
 
   const uploadImage = async (file: File): Promise<string> => {
@@ -80,8 +64,7 @@ export default function EditGameModal({ game, onClose, onSuccess }: EditGameModa
       upsert: false,
     });
     if (error) throw new Error('Erro ao fazer upload da imagem.');
-    const { data } = supabase.storage.from('games').getPublicUrl(path);
-    return data.publicUrl;
+    return supabase.storage.from('games').getPublicUrl(path).data.publicUrl;
   };
 
   const handleSave = async () => {
@@ -97,10 +80,8 @@ export default function EditGameModal({ game, onClose, onSuccess }: EditGameModa
 
       if (imageFile) {
         finalImageUrl = await uploadImage(imageFile);
-      } else if (hasUrl) {
-        finalImageUrl = imageUrl.trim();
-      } else if (isExistingStorageImage) {
-        // Mantém a imagem atual do Storage
+      } else if (imagePreview) {
+        // Mantém a URL existente (storage ou externa)
         finalImageUrl = game.image_url;
       }
 
@@ -137,14 +118,12 @@ export default function EditGameModal({ game, onClose, onSuccess }: EditGameModa
         </div>
 
         <div className={styles.fields}>
-          {/* Nome */}
           <div className={styles.field}>
             <label className={styles.label}>Nome</label>
             <input className={styles.input} type="text" value={name}
               onChange={(e) => setName(e.target.value)} placeholder="Ex: Uno Cards" />
           </div>
 
-          {/* Categoria */}
           <div className={styles.field}>
             <label className={styles.label}>Categoria</label>
             <select className={styles.input} value={category}
@@ -156,54 +135,66 @@ export default function EditGameModal({ game, onClose, onSuccess }: EditGameModa
             </select>
           </div>
 
-          {/* Quantidade */}
           <div className={styles.field}>
             <label className={styles.label}>Quantidade</label>
             <input className={styles.input} type="number" min={1} value={totalCopies}
               onChange={(e) => setTotalCopies(e.target.value)} placeholder="Ex: 3" />
           </div>
 
-          {/* Upload */}
-          <div className={`${styles.field} ${hasUrl ? styles.fieldDisabled : ''}`}>
-            <label className={styles.label}>Upload de Imagem</label>
-            <div className={styles.uploadWrapper}>
-              <button type="button" className={styles.uploadBtn}
-                onClick={() => !hasUrl && fileInputRef.current?.click()}
-                disabled={hasUrl}>
-                {imagePreview ? 'Trocar imagem' : 'Escolher arquivo'}
-              </button>
-              {imagePreview && (
-                <div className={styles.previewWrapper}>
-                  <Image src={imagePreview} alt="Preview" width={48} height={48}
-                    className={styles.preview} unoptimized />
-                  <button type="button" className={styles.clearBtn} onClick={clearImage}>✕</button>
+          <div className={styles.field}>
+            <label className={styles.label}>Imagem <span className={styles.optional}>(opcional)</span></label>
+
+            {imagePreview ? (
+              <div className={styles.previewZone}>
+                <Image src={imagePreview} alt="Preview" width={72} height={72}
+                  className={styles.preview} unoptimized />
+                <div className={styles.previewInfo}>
+                  <span className={styles.previewName}>
+                    {imageFile ? imageFile.name : 'Imagem atual'}
+                  </span>
+                  <div className={styles.previewActions}>
+                    <button type="button" className={styles.replaceBtn}
+                      onClick={() => fileInputRef.current?.click()}>
+                      Trocar
+                    </button>
+                    <button type="button" className={styles.clearBtn} onClick={clearImage}>
+                      Remover
+                    </button>
+                  </div>
                 </div>
-              )}
-              <input ref={fileInputRef} type="file" accept="image/*"
-                className={styles.hiddenInput} onChange={handleFileChange} />
-            </div>
+              </div>
+            ) : (
+              <div
+                className={`${styles.dropZone} ${isDragging ? styles.dropZoneDragging : ''}`}
+                onDragOver={handleDragOver}
+                onDragLeave={handleDragLeave}
+                onDrop={handleDrop}
+                onClick={() => fileInputRef.current?.click()}
+              >
+                <svg className={styles.dropIcon} viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" strokeWidth="1.5">
+                  <path strokeLinecap="round" strokeLinejoin="round"
+                    d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
+                </svg>
+                <span className={styles.dropText}>
+                  {isDragging ? 'Solte aqui' : 'Arraste ou clique para selecionar'}
+                </span>
+                <span className={styles.dropHint}>PNG, JPG, WEBP</span>
+              </div>
+            )}
+
+            <input ref={fileInputRef} type="file" accept="image/*"
+              className={styles.hiddenInput}
+              onChange={(e) => { const f = e.target.files?.[0]; if (f) applyFile(f); }} />
           </div>
 
-          {/* URL */}
-          <div className={`${styles.field} ${hasFile || isExistingStorageImage ? styles.fieldDisabled : ''}`}>
-            <label className={styles.label}>URL da Imagem</label>
-            <input className={styles.input} type="text" value={imageUrl}
-              onChange={handleUrlChange} placeholder="https://..."
-              disabled={hasFile || isExistingStorageImage} />
-          </div>
-
-          {/* Anotação */}
           <div className={styles.field}>
             <label className={styles.label}>
               Anotação <span className={styles.optional}>(estado do jogo, peças faltando, etc.)</span>
             </label>
-            <textarea
-              className={styles.textarea}
-              value={observacao}
+            <textarea className={styles.textarea} value={observacao}
               onChange={(e) => setObservacao(e.target.value)}
-              placeholder="Ex: faltando 2 cartas, caixa amassada..."
-              rows={3}
-            />
+              placeholder="Ex: faltando 2 cartas, caixa amassada..." rows={3} />
           </div>
 
           {error && <p className={styles.error}>{error}</p>}

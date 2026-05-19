@@ -19,20 +19,22 @@ export async function GET(req: Request) {
 export async function POST(req: Request) {
   const body = await req.json()
 
-  // 1 jogo por aluno: bloqueia se já tiver empréstimo ativo
-  const { data: existing } = await supabase
-    .from('loans')
-    .select('id, game_name')
-    .eq('student_ra', body.student_ra)
-    .eq('unidade_slug', body.unidade_slug)
-    .eq('returned', false)
-    .single()
+  // 1 jogo por aluno: só valida se o RA foi informado
+  if (body.student_ra?.trim()) {
+    const { data: existing } = await supabase
+      .from('loans')
+      .select('id, game_name')
+      .eq('student_ra', body.student_ra.trim())
+      .eq('unidade_slug', body.unidade_slug)
+      .eq('returned', false)
+      .single()
 
-  if (existing) {
-    return NextResponse.json(
-      { error: `Este aluno já possui "${existing.game_name}" emprestado. Devolva antes de emprestar outro.` },
-      { status: 409 }
-    )
+    if (existing) {
+      return NextResponse.json(
+        { error: `Este aluno já possui "${existing.game_name}" emprestado. Devolva antes de emprestar outro.` },
+        { status: 409 }
+      )
+    }
   }
 
   // Valida cópias disponíveis
