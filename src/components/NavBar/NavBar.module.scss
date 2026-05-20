@@ -70,6 +70,68 @@
   flex-shrink: 0;
 }
 
+// ─── Sidebar user ────────────────────────────────────────────────────────────
+
+.sidebarUser {
+  display: none;
+
+  @media (min-width: 1024px) {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: auto;
+    padding: 16px 20px;
+    border-top: 1px solid #f3f4f6;
+  }
+}
+
+.sidebarAvatar {
+  width: 32px;
+  height: 32px;
+  min-width: 32px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #022E63, #0a4a9c);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.sidebarAvatarImg {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+  display: block;
+}
+
+.sidebarAvatarInitial {}
+
+.sidebarUserInfo {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.sidebarUserName {
+  font-size: 13px;
+  font-weight: 600;
+  color: #111;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sidebarUserRole {
+  font-size: 11px;
+  color: #9ca3af;
+  font-weight: 400;
+}
+
 // ─── Mobile Bottom Bar ───────────────────────────────────────────────────────
 
 .bottomBar {

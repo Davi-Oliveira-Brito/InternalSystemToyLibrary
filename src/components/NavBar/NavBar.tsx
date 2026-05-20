@@ -79,10 +79,14 @@ const ADMIN_ITEMS: NavItem[] = [
 
 export default function NavBar() {
   const pathname = usePathname()
-  const [role, setRole] = useState<string | null>(null)
+  const [role,   setRole]   = useState<string | null>(null)
+  const [uName,  setUName]  = useState('')
+  const [uAvatar, setUAvatar] = useState('')
 
   useEffect(() => {
     setRole(sessionStorage.getItem('role'))
+    setUName(sessionStorage.getItem('name') || '')
+    setUAvatar(sessionStorage.getItem('avatar_url') || '')
   }, [pathname])
 
   const hidden = HIDDEN_PATHS.some(p => pathname === p)
@@ -120,6 +124,19 @@ export default function NavBar() {
             </li>
           ))}
         </ul>
+
+        <div className={styles.sidebarUser}>
+          <div className={styles.sidebarAvatar}>
+            {uAvatar
+              ? <Image src={uAvatar} alt={uName} width={32} height={32} className={styles.sidebarAvatarImg} unoptimized />
+              : <span className={styles.sidebarAvatarInitial}>{uName.charAt(0).toUpperCase()}</span>
+            }
+          </div>
+          <div className={styles.sidebarUserInfo}>
+            <span className={styles.sidebarUserName}>{uName.split(' ')[0]}</span>
+            <span className={styles.sidebarUserRole}>{role === 'admin' ? 'Administrador' : 'Estagiário'}</span>
+          </div>
+        </div>
       </nav>
 
       <nav className={styles.bottomBar} aria-label="Navegação principal">

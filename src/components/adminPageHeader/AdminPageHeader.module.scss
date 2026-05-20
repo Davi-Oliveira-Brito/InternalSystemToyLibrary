@@ -1,0 +1,29 @@
+.header {
+  padding: 28px 20px 20px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.title {
+  font-size: 22px;
+  font-weight: 800;
+  color: #0f172a;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+.subtitle {
+  font-size: 14px;
+  color: #6b7280;
+  margin-top: 4px;
+  font-weight: 400;
+}
+
+@media (min-width: 1024px) {
+  .header {
+    padding: 36px 40px 24px;
+  }
+
+  .title {
+    font-size: 28px;
+  }
+}

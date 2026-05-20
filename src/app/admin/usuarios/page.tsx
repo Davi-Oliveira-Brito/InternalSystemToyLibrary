@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import styles from './page.module.scss';
 
-import AdminBanner from '@/components/adminBanner/page';
+import AdminPageHeader from '@/components/adminPageHeader/AdminPageHeader';
 import UserCard from '@/components/UserCard/page';
 import UserModal from '@/components/modals/userModal/page';
 import ConfirmDeleteModal from '@/components/modals/deleteGamemodal/page';
@@ -25,8 +25,6 @@ interface UserData {
 
 export default function AdminUsuarios() {
   const router = useRouter();
-  const [name, setName] = useState('');
-  const [avatar, setAvatar] = useState('');
   const [users, setUsers] = useState<UserData[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -40,8 +38,6 @@ export default function AdminUsuarios() {
     const auth = sessionStorage.getItem('auth');
     const role = sessionStorage.getItem('role');
     if (!auth || role !== 'admin') { router.push('/login'); return; }
-    setName(sessionStorage.getItem('name') || '');
-    setAvatar(sessionStorage.getItem('avatar_url') || '');
   }, [router]);
 
   const fetchUsers = async () => {
@@ -107,13 +103,7 @@ export default function AdminUsuarios() {
 
   return (
     <main className={styles.page}>
-      <AdminBanner
-        backgroundImage="/cards/GerenciarJogos.png"
-        avatar={avatar}
-        username={name}
-        title="Gerenciar Usuários"
-        subtitle="Crie, edite e remova usuários do sistema"
-      />
+      <AdminPageHeader title="Gerenciar Usuários" subtitle="Crie, edite e remova usuários do sistema" />
 
       <div className={styles.content}>
         <div className={styles.topBar}>

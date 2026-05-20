@@ -12,39 +12,151 @@
   gap: 12px;
 }
 
-.unidadeSelector {
+.filters {
   display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.filterSelect {
+  padding: 7px 30px 7px 14px;
+  border-radius: 20px;
+  border: 1px solid #d1d5db;
+  background: #ffffff;
+  appearance: none;
+  -webkit-appearance: none;
+  font-size: 13px;
+  font-weight: 600;
+  font-family: inherit;
+  color: #374151;
+  cursor: pointer;
+  outline: none;
+  transition: border-color 0.15s, color 0.15s;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 12px;
+
+  &:hover { border-color: #022E63; color: #022E63; }
+  &:focus { border-color: #022E63; outline: none; }
+}
+
+.topRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+
+.customRange {
+  display: flex;
+  align-items: center;
   gap: 8px;
   flex-wrap: wrap;
-  padding-bottom: 4px;
 }
 
-.unidadeBtn {
+.dateInput {
   padding: 7px 14px;
   border-radius: 20px;
-  background: #ffffff;
-  border: 1px solid rgba(0, 0, 0, 0.12);
-  color: #666666;
+  border: 1px solid #d1d5db;
   font-size: 13px;
-  font-weight: 500;
-  cursor: pointer;
+  font-weight: 600;
   font-family: inherit;
-  transition: all 0.15s ease;
+  color: #374151;
+  background: #ffffff;
+  outline: none;
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s;
 
-  &:hover { color: #111111; border-color: rgba(0, 0, 0, 0.3); }
+  &:hover { border-color: #022E63; color: #022E63; }
+  &:focus { border-color: #022E63; }
 }
 
-.unidadeBtnActive {
-  background: #022E63;
-  color: #ffffff;
-  border-color: #022E63;
-  font-weight: 700;
+.dateSep {
+  color: #9ca3af;
+  font-size: 14px;
+}
+
+// ─── Top row ─────────────────────────────────────────────────────────────────
+
+.topRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
 }
 
 .weekLabel {
   font-size: 13px;
   color: #999999;
   margin: 0;
+}
+
+// ─── Export button ────────────────────────────────────────────────────────────
+
+.exportWrapper {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.exportBtn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  border-radius: 20px;
+  border: 1px solid #d1d5db;
+  background: #ffffff;
+  color: #374151;
+  font-size: 13px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+
+  &:hover { border-color: #022E63; color: #022E63; }
+  &:disabled { opacity: 0.4; cursor: not-allowed; }
+}
+
+.exportDropdown {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 6px);
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.10);
+  min-width: 200px;
+  padding: 6px;
+  z-index: 50;
+  animation: dropIn 0.12s ease;
+}
+
+@keyframes dropIn {
+  from { opacity: 0; transform: translateY(-6px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.exportItem {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  width: 100%;
+  text-align: left;
+  padding: 9px 12px;
+  border-radius: 8px;
+  border: none;
+  background: transparent;
+  font-size: 13px;
+  font-weight: 500;
+  color: #374151;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.12s;
+
+  &:hover { background: #f3f4f6; }
 }
 
 .sectionTitle {
@@ -74,5 +186,44 @@
   .grid {
     grid-template-columns: repeat(3, 1fr);
     gap: 16px;
+  }
+}
+
+@media print {
+  :global(nav),
+  :global(header),
+  :global(.has-nav) { padding: 0 !important; }
+
+  .page { background: #fff !important; }
+
+  // Esconde banner, nav e botão de exportar
+  :global([class*="banner"]),
+  :global([class*="sidebar"]),
+  :global([class*="bottomBar"]),
+  .exportWrapper,
+  .filters { display: none !important; }
+
+  .content {
+    padding: 20px !important;
+    gap: 12px !important;
+  }
+
+  .grid {
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 10px !important;
+  }
+
+  // Adiciona cabeçalho com título e data no print
+  .topRow::before {
+    content: "Relatório Semanal — Ludoteca";
+    display: block;
+    font-size: 20px;
+    font-weight: 700;
+    color: #022E63;
+    margin-bottom: 4px;
+  }
+
+  .weekLabel {
+    font-size: 12px !important;
   }
 }

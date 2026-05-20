@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import styles from './page.module.scss';
-import AdminBanner from '@/components/adminBanner/page';
+import AdminPageHeader from '@/components/adminPageHeader/AdminPageHeader';
 import MenuCard from '@/components/card/page';
 
 const cards = [
@@ -38,11 +38,8 @@ export default function AdminHome() {
 
   return (
     <main className={styles.page}>
-      <AdminBanner
-        backgroundImage="/cards/GerenciarJogos.png"
-        avatar={avatar}
-        username={name}
-        title={`Olá, ${name.split(' ')[0]}!`}
+      <AdminPageHeader
+        title={`Olá, ${name.split(' ')[0] || 'Admin'}!`}
         subtitle="Painel Administrativo — Sistema Interno Ludoteca"
       />
 
