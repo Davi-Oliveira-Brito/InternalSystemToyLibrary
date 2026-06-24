@@ -48,7 +48,7 @@ export async function PUT(
     .select()
     .single()
 
-  if (error) return NextResponse.json({ error }, { status: 500 })
+  if (error) return NextResponse.json({ error: error.message }, { status: 500 })
 
   // Se trocou a imagem e a antiga era do Storage, apaga
   const oldUrl = current?.image_url
@@ -92,7 +92,7 @@ export async function DELETE(
     .delete()
     .eq('id', id)
 
-  if (error) return NextResponse.json({ error }, { status: 500 })
+  if (error) return NextResponse.json({ error: error.message }, { status: 500 })
 
   // Apaga imagem do Storage se for do Supabase
   if (game?.image_url && isSupabaseUrl(game.image_url)) {

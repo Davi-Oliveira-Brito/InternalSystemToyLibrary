@@ -23,7 +23,7 @@ export async function GET(req: Request) {
     .eq('email', email)
     .single()
 
-  if (error) return NextResponse.json({ error }, { status: 500 })
+  if (error) return NextResponse.json({ error: error.message }, { status: 500 })
   return NextResponse.json(data)
 }
 
@@ -67,7 +67,7 @@ export async function PUT(req: Request) {
     .select('id, name, email, unidade_slug, avatar_url')
     .single()
 
-  if (error) return NextResponse.json({ error }, { status: 500 })
+  if (error) return NextResponse.json({ error: error.message }, { status: 500 })
 
   // Deleta avatar antigo do Storage se trocou
   const oldUrl = current?.avatar_url

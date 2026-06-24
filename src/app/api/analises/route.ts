@@ -33,7 +33,7 @@ export async function GET(req: Request) {
     .gte('loaned_at', periodFrom)
     .lte('loaned_at', periodTo)
 
-  if (error) return NextResponse.json({ error }, { status: 500 })
+  if (error) return NextResponse.json({ error: error.message }, { status: 500 })
 
   const { count: totalGames } = await supabase
     .from('games')
@@ -58,7 +58,9 @@ export async function GET(req: Request) {
 
   const hourCount: Record<number, number> = {}
   for (const l of periodLoans) {
-    const hour = new Date(l.loaned_at).getHours()
+    const s = l.loaned_at as string
+    const utc = new Date(/[Z+-]/.test(s.slice(19)) ? s : s + 'Z')
+    const hour = Number(utc.toLocaleString('pt-BR', { hour: 'numeric', hour12: false, timeZone: 'America/Sao_Paulo' }))
     hourCount[hour] = (hourCount[hour] ?? 0) + 1
   }
   const peakHourEntry = Object.entries(hourCount).sort((a, b) => Number(b[1]) - Number(a[1]))[0]

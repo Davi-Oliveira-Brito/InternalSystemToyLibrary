@@ -12,8 +12,12 @@ import GameCard from '@/components/gamecard/page';
 import LoanModal from '@/components/modals/loanModal/page';
 import ReturnModal from '@/components/modals/returnModal/page';
 
+function toUTC(s: string) {
+  return new Date(/[Z+-]/.test(s.slice(19)) ? s : s + 'Z');
+}
+
 function timeAgo(dateStr: string): string {
-  const diff = Date.now() - new Date(dateStr).getTime();
+  const diff = Date.now() - toUTC(dateStr).getTime();
   const mins = Math.floor(diff / 60000);
   if (mins < 1) return 'agora';
   if (mins < 60) return `há ${mins}min`;

@@ -14,14 +14,18 @@ interface LoanModalProps {
 
 export default function LoanModal({ gameId, gameName, unidade_slug, onClose, onSuccess }: LoanModalProps) {
   const [studentName, setStudentName] = useState('');
-  const [studentRa, setStudentRa] = useState('');
   const [studentClass, setStudentClass] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
   const handleSave = async () => {
-    if (!studentName.trim() || !studentClass.trim()) {
+    const firstName = studentName.trim();
+    if (!firstName || !studentClass.trim()) {
       setError('Nome e Turma são obrigatórios.');
+      return;
+    }
+    if (/\s/.test(firstName)) {
+      setError('Use apenas o primeiro nome, sem sobrenome.');
       return;
     }
 
@@ -36,7 +40,6 @@ export default function LoanModal({ gameId, gameName, unidade_slug, onClose, onS
           game_id: gameId,
           game_name: gameName,
           student_name: studentName.trim(),
-          student_ra: studentRa.trim(),
           student_class: studentClass.trim(),
           unidade_slug,
         }),
@@ -74,8 +77,8 @@ export default function LoanModal({ gameId, gameName, unidade_slug, onClose, onS
           <div className={styles.field}>
             <label className={styles.label}>Nome do Aluno</label>
             <input className={styles.input} type="text" value={studentName}
-              onChange={(e) => setStudentName(e.target.value)}
-              placeholder="Ex: João Silva" />
+              onChange={(e) => setStudentName(e.target.value.replace(/\s/g, ''))}
+              placeholder="Ex: João" />
           </div>
 
           <div className={styles.field}>
@@ -83,13 +86,6 @@ export default function LoanModal({ gameId, gameName, unidade_slug, onClose, onS
             <input className={styles.input} type="text" value={studentClass}
               onChange={(e) => setStudentClass(e.target.value)}
               placeholder="Ex: 9A" />
-          </div>
-
-          <div className={styles.field}>
-            <label className={styles.label}>RA <span className={styles.optional}>(opcional)</span></label>
-            <input className={styles.input} type="text" value={studentRa}
-              onChange={(e) => setStudentRa(e.target.value)}
-              placeholder="Ex: 123456" />
           </div>
 
           {error && <p className={styles.error}>{error}</p>}

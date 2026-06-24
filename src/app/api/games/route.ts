@@ -12,7 +12,7 @@ export async function GET(req: Request) {
     .eq('loans.returned', false)
     .order('name')
 
-  if (error) return NextResponse.json({ error }, { status: 500 })
+  if (error) return NextResponse.json({ error: error.message }, { status: 500 })
 
   const gamesWithAvailability = games.map((game: any) => {
     const activeLoans = game.active_loans?.[0]?.count ?? 0
@@ -41,6 +41,6 @@ export async function POST(req: Request) {
     .select()
     .single()
 
-  if (error) return NextResponse.json({ error }, { status: 500 })
+  if (error) return NextResponse.json({ error: error.message }, { status: 500 })
   return NextResponse.json(data)
 }

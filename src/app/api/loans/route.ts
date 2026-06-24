@@ -12,7 +12,7 @@ export async function GET(req: Request) {
     .eq('returned', false)
     .order('loaned_at', { ascending: false })
 
-  if (error) return NextResponse.json({ error }, { status: 500 })
+  if (error) return NextResponse.json({ error: error.message }, { status: 500 })
   return NextResponse.json(data)
 }
 
@@ -63,13 +63,13 @@ export async function POST(req: Request) {
       game_id: body.game_id,
       game_name: body.game_name,
       student_name: body.student_name,
-      student_ra: body.student_ra,
+      student_ra: body.student_ra ?? '',
       student_class: body.student_class,
       unidade_slug: body.unidade_slug,
     })
     .select()
     .single()
 
-  if (error) return NextResponse.json({ error }, { status: 500 })
+  if (error) return NextResponse.json({ error: error.message }, { status: 500 })
   return NextResponse.json(data)
 }

@@ -22,9 +22,12 @@ interface ReturnModalProps {
 
 const PRAZO_MINUTOS = 30;
 
+function toUTC(s: string) {
+  return new Date(/[Z+-]/.test(s.slice(19)) ? s : s + 'Z');
+}
+
 function getElapsed(loaned_at: string, now: number) {
-  const iso = loaned_at.endsWith('Z') ? loaned_at : loaned_at + 'Z';
-  return Math.max(0, Math.floor((now - new Date(iso).getTime()) / 60000));
+  return Math.max(0, Math.floor((now - toUTC(loaned_at).getTime()) / 60000));
 }
 
 export default function ReturnModal({ gameName, loans, onClose, onReturn }: ReturnModalProps) {
@@ -45,9 +48,8 @@ export default function ReturnModal({ gameName, loans, onClose, onReturn }: Retu
     }
   };
 
-  const formatTime = (iso: string) => {
-    return new Date(iso).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
-  };
+  const formatTime = (dateStr: string) =>
+    toUTC(dateStr).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
 
   return (
     <div className={styles.overlay} onClick={onClose}>

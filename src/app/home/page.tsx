@@ -31,8 +31,8 @@ export default function HomePage() {
         .then((loans: { loaned_at: string }[]) => {
           const now = Date.now()
           const count = loans.filter((l: { loaned_at: string }) => {
-            const iso = l.loaned_at.endsWith('Z') ? l.loaned_at : l.loaned_at + 'Z'
-            return (now - new Date(iso).getTime()) > PRAZO_MINUTOS * 60000
+            const d = new Date(/[Z+-]/.test(l.loaned_at.slice(19)) ? l.loaned_at : l.loaned_at + 'Z')
+            return (now - d.getTime()) > PRAZO_MINUTOS * 60000
           }).length
           setOverdueCount(count)
         })
